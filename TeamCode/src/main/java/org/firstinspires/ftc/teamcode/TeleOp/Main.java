@@ -21,18 +21,12 @@ public class Main extends LinearOpMode {
     private DcMotor LinearSlide = null;
 
     private double FORTY_FIVE_IN_RADS = Math.PI/4;
+    private double TPR = 537.7; // ticks per revolution
 
     @Override
-    public void runOpMode() {
-        double x1 = 0; //left or right lol
-        double y1 = 0; // front or back lol
-        double cosine45 = Math.cos(FORTY_FIVE_IN_RADS);
-        double sine45 = Math.sin(FORTY_FIVE_IN_RADS);
+    public void runOpMode() throws InterruptedException {
 
-        double totalRevolutions = 751.8;
 
-        double x2 = 0;
-        double y2 = 0;
         // Send success signal
         telemetry.addData("Status", "Success!");
         telemetry.update();
@@ -47,16 +41,17 @@ public class Main extends LinearOpMode {
 
         LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        LinearSlide.setDirection(DcMotor.Direction.FORWARD);
+        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
 
-        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        //when you're setting it up (in opMode)
         LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
@@ -83,33 +78,33 @@ public class Main extends LinearOpMode {
             telemetry.addData("Status", "in");
             telemetry.update();
 
-                /*
-                //if moving joystick then spin
-                frontLeftMotor.setPower(-spin);
-                backRightMotor.setPower(spin);
-
-                frontRightMotor.setPower(-spin);
-                backLeftMotor.setPower(spin);
-
+            if (gamepad1.a) {
+                setSlide(4000, .75);
             }
-
-            else {
-                //normal driving if nothing is happening with the right joystick
-                y1 = -gamepad1.left_stick_y;
-                x1 = gamepad1.right_stick_x;
-                //rotate 45 counter clockwise lol
-                y2 = y1 * cosine45 + x1 * sine45;
-                x2 = x1 * cosine45 - y1 * sine45;
-
-                frontLeftMotor.setPower(x2);
-                backRightMotor.setPower(x2);
-
-                frontRightMotor.setPower(y2);
-                backLeftMotor.setPower(y2);
+            if (gamepad1.b) {
+                setSlide(0, 0);
             }
-            */
-//            telemetry.addData("Status", "Nothing Pressed");
-//            telemetry.update();
         }
+    }
+
+
+// Make sure the encoder cables are connected right, and the the forward/backward is in the right place
+
+    //this is the function for setSlideTicks
+    public void setSlide(int ticks, double power) throws InterruptedException{
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        LinearSlide.setTargetPosition(ticks);
+
+        LinearSlide.setPower(power);
+
+        LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while(LinearSlide.isBusy()) {
+        }
+
+        //linearSlide.setPower(0);
+
+        //linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
