@@ -18,6 +18,8 @@ public class Main extends LinearOpMode {
     private DcMotor frontRightMotor = null;
     private DcMotor backRightMotor = null;
 
+    private DcMotor LinearSlide = null;
+
     private double FORTY_FIVE_IN_RADS = Math.PI/4;
 
     @Override
@@ -26,6 +28,8 @@ public class Main extends LinearOpMode {
         double y1 = 0; // front or back lol
         double cosine45 = Math.cos(FORTY_FIVE_IN_RADS);
         double sine45 = Math.sin(FORTY_FIVE_IN_RADS);
+
+        double totalRevolutions = 751.8;
 
         double x2 = 0;
         double y2 = 0;
@@ -39,10 +43,21 @@ public class Main extends LinearOpMode {
         frontRightMotor  = hardwareMap.get(DcMotor.class, "front_right");
         backRightMotor  = hardwareMap.get(DcMotor.class, "back_right");
 
+        LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        LinearSlide.setDirection(DcMotor.Direction.FORWARD);
+
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
@@ -77,6 +92,7 @@ public class Main extends LinearOpMode {
                 backLeftMotor.setPower(spin);
 
             }
+
             else {
                 //normal driving if nothing is happening with the right joystick
                 y1 = -gamepad1.left_stick_y;
