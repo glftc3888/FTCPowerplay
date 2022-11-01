@@ -91,15 +91,18 @@ public class Main extends LinearOpMode {
             backRightMotor.setPower(leftY - leftX + rightX);
             backLeftMotor.setPower(leftY + leftX - rightX);
             telemetry.addData("Status", "in");
+            int pos = LinearSlide.getCurrentPosition();
+            telemetry.addLine(String.valueOf(pos));
             telemetry.update();
 
             // linear slide code testing
+            /*
             if (gamepad1.a) {
                 setSlideMMAbsolute(500, .75);
             }
             if (gamepad1.b) {
                 setSlideMMAbsolute(0, .5);
-            }
+            }*/
         }
     }
 

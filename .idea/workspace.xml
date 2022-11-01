@@ -7,9 +7,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a6377a7-9013-41e7-a16a-79109627aa06" name="Changes" comment="Added linear slide function to make it go up (should but doesn't go down yet)">
+    <list default="true" id="4a6377a7-9013-41e7-a16a-79109627aa06" name="Changes" comment="Fixed linear slide code to be able to go down, and made also added function to move it by mm distances rather than only encoder ticks">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FtcRobotController/build/generated/source/buildConfig/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/generated/source/buildConfig/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +135,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667254313386</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fixed linear slide code to be able to go down, and made also added function to move it by mm distances rather than only encoder ticks">
+      <created>1667328207620</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1667328207620</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -152,6 +159,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="adding vertical/horizontal/pivot, and setting power. - in other words making mechanum drive train." />
     <MESSAGE value="Added linear slide function to make it go up (should but doesn't go down yet)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added linear slide function to make it go up (should but doesn't go down yet)" />
+    <MESSAGE value="Fixed linear slide code to be able to go down, and made also added function to move it by mm distances rather than only encoder ticks" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed linear slide code to be able to go down, and made also added function to move it by mm distances rather than only encoder ticks" />
   </component>
 </project>
