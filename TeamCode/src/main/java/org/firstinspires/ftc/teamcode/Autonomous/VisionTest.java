@@ -1,5 +1,5 @@
+/*
 package org.firstinspires.ftc.teamcode.Autonomous;
-import org.firstinspires.ftc.teamcode.Autonomous.java.SleeveDetection;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -45,3 +45,4 @@ public class VisionTest extends LinearOpMode {
         waitForStart();
     }
 }
+*/
