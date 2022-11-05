@@ -11,18 +11,16 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
 
-@TeleOp(name = "TeleOpMain", group = "TeleOp")
-public class Main extends LinearOpMode {
+@TeleOp(name = "LinearSlide", group = "TeleOp")
+public class LinearSlide extends LinearOpMode {
 
     // Declaration of global variables
     private ElapsedTime runtime = new ElapsedTime();
-
-    private DcMotor frontLeftMotor = null;
-    private DcMotor backLeftMotor = null;
-    private DcMotor frontRightMotor = null;
-    private DcMotor backRightMotor = null;
-
-    //private DcMotor LinearSlide = null;
+// private DcMotor frontLeftMotor = null;
+// private DcMotor backLeftMotor = null;
+// private DcMotor frontRightMotor = null;
+// private DcMotor backRightMotor = null;
+    private DcMotor LinearSlide = null;
 
     // will use later... This is for angle (see code from last year)
     BNO055IMU IMU;
@@ -46,32 +44,32 @@ public class Main extends LinearOpMode {
         telemetry.update();
 
         // Setup hardware
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "back_left");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
-        backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
+        //frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
+        //backLeftMotor = hardwareMap.get(DcMotor.class, "back_left");
+        //frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
+        //backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
 
-        //LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+        LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
 
-        //LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        //frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        //frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        //backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        //backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // keep it reverse if you want positive ticks to move linear slide up
         //LinearSlide.setDirection(DcMotor.Direction.REVERSE);
 
         //when you're setting it up (in opMode)
-        //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontRightMotor.setPower(0);
+        //frontLeftMotor.setPower(0);
+        //backLeftMotor.setPower(0);
+        //backRightMotor.setPower(0);
+        //frontRightMotor.setPower(0);
 
         // Wait for start
         waitForStart();
@@ -80,36 +78,36 @@ public class Main extends LinearOpMode {
         // Start of OpMode
         while (opModeIsActive()) {
             // Power up the motors using left and right sticks
-            double leftX = gamepad1.left_stick_x;
-            double leftY = gamepad1.left_stick_y;
-            double rightX = gamepad1.right_stick_x;
-            double rightY = gamepad1.right_stick_y;
+            //double leftX = gamepad1.left_stick_x;
+            //double leftY = gamepad1.left_stick_y;
+            //double rightX = gamepad1.right_stick_x;
+            //double rightY = gamepad1.right_stick_y;
 
             // move mecanum drivetrain
-            frontLeftMotor.setPower((leftY - leftX - rightX)/2);
-            frontRightMotor.setPower((leftY + leftX + rightX)/2);
-            backRightMotor.setPower((leftY - leftX + rightX)/2);
-            backLeftMotor.setPower((leftY + leftX - rightX)/2);
-            //telemetry.addData("Status", "in");
-            //int pos = LinearSlide.getCurrentPosition();
-            //telemetry.addLine(String.valueOf(pos));
-            //telemetry.update();
+            //frontLeftMotor.setPower((leftY - leftX - rightX)/2);
+            //frontRightMotor.setPower((leftY + leftX + rightX)/2);
+            //backRightMotor.setPower((leftY - leftX + rightX)/2);
+            //backLeftMotor.setPower((leftY + leftX - rightX)/2);
+            telemetry.addData("Status", "in");
+            int pos = LinearSlide.getCurrentPosition();
+            telemetry.addLine(String.valueOf(pos));
+            telemetry.update();
 
             // linear slide code testing
 
-            /*if (gamepad1.a) {
+            if (gamepad1.a) {
                 setSlideMMAbsolute(500, .75);
             }
 
-             */
+
         }
     }
-}
 
 
-    // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
-    // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
-    /*public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
+
+// Make sure the encoder cables are connected right, and the the forward/backward is in the right place
+// setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
+    public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
         // move BY difference between the positions the linear slide is at
         int currentPosition = LinearSlide.getCurrentPosition();
         int positionDifference = ticksPosition - currentPosition;
@@ -137,4 +135,4 @@ public class Main extends LinearOpMode {
     }
 }
 
-     */
+

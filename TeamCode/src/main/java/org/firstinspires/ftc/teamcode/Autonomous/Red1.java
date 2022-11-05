@@ -32,12 +32,12 @@ public class Red1 extends LinearOpMode {
     // Link for motor:
     // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     // Ticks Per Rotation (how many ticks in one full motor rotation)
-    private double TPR = 1440;// ticks per revolution
+    private double TPR = 537.7;// ticks per revolution
     // circumference of the pulley circle pulling the string in linear slides
     private double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
     private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
-    private final double RADIUS=2;
+    private final double RADIUS=48;
     private final double PI=3.1415926535;
     private final double circum = 2*PI*RADIUS;
     @Override

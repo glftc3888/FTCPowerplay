@@ -37,7 +37,7 @@ public class TestAuto extends LinearOpMode {
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
     private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
     private static final int ticksToWheelRevolution = 1440;
-    private static final double RADIUS= 3.5;
+    private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
     private static final double circum = 2*PI*RADIUS;
 
@@ -94,7 +94,7 @@ public class TestAuto extends LinearOpMode {
 
         // Start of OpMode
         while (opModeIsActive()) {
-            encoderForward(4);
+            encoderForward(10, .2);
             readEncoder();
             stopRobot();
 
@@ -144,15 +144,15 @@ public class TestAuto extends LinearOpMode {
     }
 
      */
-    public static boolean isMoving() {
+    public static boolean isBusy() {
         return (frontLeftMotor.isBusy() || backLeftMotor.isBusy() || backRightMotor.isBusy() || frontRightMotor.isBusy());
     }
 
     public void forward(double power) {
-        backLeftMotor.setPower(-power);
-        backRightMotor.setPower(-power);
-        frontRightMotor.setPower(-power);
-        frontLeftMotor.setPower(-power);
+        backLeftMotor.setPower(power);
+        backRightMotor.setPower(power);
+        frontRightMotor.setPower(power);
+        frontLeftMotor.setPower(power);
     }
 
     public static void strafe(double power) {
@@ -176,16 +176,15 @@ public class TestAuto extends LinearOpMode {
         backLeftMotor.setPower(-power);
     }
 
-    public void encoderForward(double inches) {
-        //int ticks = (int) ((inches / circum) * ticksToWheelRevolution);
-        int ticks=5000;
-        forward(0.75);
+    public void encoderForward(double cm, double power) {
+        int ticks = (int) ((cm / circum) * ticksToWheelRevolution);
 
-        telemetry.addLine("doing stuff");
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        forward(power);
 
         frontLeftMotor.setTargetPosition(-ticks);
         frontRightMotor.setTargetPosition(-ticks);
@@ -198,24 +197,35 @@ public class TestAuto extends LinearOpMode {
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
+        while(isBusy()){};
+
         forward(0);
-        stopRobot();
-
-
-
-    }
-
-    public static void encoderStrafe(double inches) {
-        int ticks = (int) (inches / circum) * ticksToWheelRevolution;
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
+    }
+
+    public static void encoderStrafe(double cm, double power) {
+        // Fix the straffing encoders
+        // 1) It has to work
+        // 2) Since it's straffing it will move less than inches
+
+        int ticks = (int) ((cm / circum) * ticksToWheelRevolution);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        strafe(power);
+
         frontLeftMotor.setTargetPosition(-ticks);
-        frontRightMotor.setTargetPosition(-ticks);
-        backLeftMotor.setTargetPosition(ticks);
+        frontRightMotor.setTargetPosition(ticks);
+        backLeftMotor.setTargetPosition(-ticks);
         backRightMotor.setTargetPosition(ticks);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -223,7 +233,15 @@ public class TestAuto extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        strafe(0.75);
+        while(isBusy()){}
+
+        strafe(0);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
     }
     public void readEncoder(){
