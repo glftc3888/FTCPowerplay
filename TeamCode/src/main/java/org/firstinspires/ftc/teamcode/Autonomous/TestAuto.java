@@ -36,7 +36,6 @@ public class TestAuto extends LinearOpMode {
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
     private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
-    private static final int ticksToWheelRevolution = 1440;
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
     private static final double circum = 2*PI*RADIUS;
@@ -91,23 +90,11 @@ public class TestAuto extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-
-        // Start of OpMode
-        while (opModeIsActive()) {
-            encoderForward(10, .2);
-            readEncoder();
-            stopRobot();
-
-            //int pos = LinearSlide.getCurrentPosition();
-            //telemetry.addLine(String.valueOf(pos));
-            //telemetry.update();
-            telemetry.addLine("your mom");
-            telemetry.update();
-            // linear slide code testing
+        // DO THINGS -- BELOW
+        //encoderForward(10, .2);
+        encoderStrafe(60, .2);
 
 
-
-        }
     }
 
 
@@ -148,21 +135,14 @@ public class TestAuto extends LinearOpMode {
         return (frontLeftMotor.isBusy() || backLeftMotor.isBusy() || backRightMotor.isBusy() || frontRightMotor.isBusy());
     }
 
-    public void forward(double power) {
+    public static void forward(double power) {
         backLeftMotor.setPower(power);
         backRightMotor.setPower(power);
         frontRightMotor.setPower(power);
         frontLeftMotor.setPower(power);
     }
 
-    public static void strafe(double power) {
-        backLeftMotor.setPower(-power);
-        backRightMotor.setPower(power);
-        frontLeftMotor.setPower(-power);
-        frontRightMotor.setPower(power);
-    }
-
-    public void stopRobot() {
+    public static void stopRobot() {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
@@ -176,8 +156,8 @@ public class TestAuto extends LinearOpMode {
         backLeftMotor.setPower(-power);
     }
 
-    public void encoderForward(double cm, double power) {
-        int ticks = (int) ((cm / circum) * ticksToWheelRevolution);
+    public static void encoderForward(double cm, double power) {
+        int ticks = (int) ((cm / circum) * TPR);
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -214,19 +194,20 @@ public class TestAuto extends LinearOpMode {
         // 1) It has to work
         // 2) Since it's straffing it will move less than inches
 
-        int ticks = (int) ((cm / circum) * ticksToWheelRevolution);
+        double magic = 1 / (Math.sin(PI/4));
+        int ticks = (int) ((cm * magic / circum) * TPR);
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        strafe(power);
+        forward(power);
 
         frontLeftMotor.setTargetPosition(-ticks);
         frontRightMotor.setTargetPosition(ticks);
-        backLeftMotor.setTargetPosition(-ticks);
-        backRightMotor.setTargetPosition(ticks);
+        backLeftMotor.setTargetPosition(ticks);
+        backRightMotor.setTargetPosition(-ticks);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -235,7 +216,7 @@ public class TestAuto extends LinearOpMode {
 
         while(isBusy()){}
 
-        strafe(0);
+        forward(0);
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
