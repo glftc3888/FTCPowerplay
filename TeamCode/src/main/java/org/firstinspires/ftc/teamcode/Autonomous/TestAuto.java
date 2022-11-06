@@ -92,7 +92,7 @@ public class TestAuto extends LinearOpMode {
 
         // DO THINGS -- BELOW
         //encoderForward(10, .2);
-        encoderStrafe(60, .2);
+        encoderStraffe(60, .2);
 
 
     }
@@ -189,7 +189,7 @@ public class TestAuto extends LinearOpMode {
 
     }
 
-    public static void encoderStrafe(double cm, double power) {
+    public static void encoderStraffe(double cm, double power) {
         // Fix the straffing encoders
         // 1) It has to work
         // 2) Since it's straffing it will move less than inches
