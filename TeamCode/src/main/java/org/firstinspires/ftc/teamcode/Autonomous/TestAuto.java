@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
@@ -21,6 +22,8 @@ public class TestAuto extends LinearOpMode {
     private static DcMotor backLeftMotor = null;
     private static DcMotor frontRightMotor = null;
     private static DcMotor backRightMotor = null;
+    private static CRServo leftServo = null;
+    private static CRServo rightServo = null;
 
     private DcMotor LinearSlide = null;
 
@@ -40,6 +43,8 @@ public class TestAuto extends LinearOpMode {
     private static final double PI=3.1415926535;
     private static final double circum = 2*PI*RADIUS;
 
+    private static boolean extended = false;
+
     @Override
     public void runOpMode() throws InterruptedException {
         // Send success signal
@@ -47,14 +52,17 @@ public class TestAuto extends LinearOpMode {
         telemetry.update();
 
         // Setup hardware
-        frontLeftMotor  = hardwareMap.get(DcMotor.class, "front_left");
-        backLeftMotor  = hardwareMap.get(DcMotor.class, "back_left");
-        frontRightMotor  = hardwareMap.get(DcMotor.class, "front_right");
-        backRightMotor  = hardwareMap.get(DcMotor.class, "back_right");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "back_left");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
+        backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
 
-        //LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+        LinearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
 
-        //LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftServo = hardwareMap.get(CRServo.class, "left_servo");
+        rightServo = hardwareMap.get(CRServo.class, "right_servo");
+
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -72,7 +80,7 @@ public class TestAuto extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -84,7 +92,7 @@ public class TestAuto extends LinearOpMode {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontRightMotor.setPower(0);
-        //LinearSlide.setPower(0);
+        LinearSlide.setPower(0);
 
         // Wait for start
         waitForStart();
@@ -92,16 +100,20 @@ public class TestAuto extends LinearOpMode {
 
         // DO THINGS -- BELOW
         //encoderForward(10, .2);
-        encoderStraffe(60, .2);
 
+        encoderForward(66.0, 0.2);
 
+        encoderStraffe(96.5, 0.2);
+
+        setSlideTicksAbsolute(500, 0.7);
+
+        moveServo();
     }
 
 
     // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
-    /*
-    public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
+    public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException {
         // move BY difference between the positions the linear slide is at
         int currentPosition = LinearSlide.getCurrentPosition();
         int positionDifference = ticksPosition - currentPosition;
@@ -111,14 +123,13 @@ public class TestAuto extends LinearOpMode {
         LinearSlide.setTargetPosition(positionDifference);
         LinearSlide.setPower(power);
         LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while(LinearSlide.isBusy()) {
+        while (LinearSlide.isBusy()) {
         }
 
         // Uncomment below if you want linear slides to just stop powering once you get to position
         //linearSlide.setPower(0);
         //linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-     */
 
     // set linear slide to certain tick position from MILLIMETER measurement upwards
     /*
@@ -231,6 +242,21 @@ public class TestAuto extends LinearOpMode {
         telemetry.addData("bottomLeft Encoder Ticks: ", backLeftMotor.getCurrentPosition());
         telemetry.addData("bottomRight Encoder Ticks: ", backRightMotor.getCurrentPosition());
         telemetry.update();
+    }
+
+    public void moveServo() {
+        if (extended) {
+            leftServo.setPower(-1);
+            rightServo.setPower(1);
+        } else {
+            leftServo.setPower(1);
+            rightServo.setPower(-1);
+        }
+
+        sleep(1000);
+
+        leftServo.setPower(0);
+        rightServo.setPower(0);
     }
 }
 
