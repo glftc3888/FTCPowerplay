@@ -86,9 +86,17 @@ public class Main extends LinearOpMode {
             telemetry.update();*/
 
             //linear slides
-            // height 1
-            if (gamepad2.y) { setSlideMMAbsolute(600, .75); }
-            if (gamepad2.x) { setSlideBottomAbsolute(.8); }
+            // height 1 (low junction)
+            if (gamepad2.a) { setSlideMMAbsolute(350, .6); }
+
+            // height 2 (medium junction)
+            if (gamepad2.b) { setSlideMMAbsolute(595, .6); }
+
+            // height 3 (high junction)
+            if (gamepad2.y) { setSlideMMAbsolute(850, .6); }
+
+            // down from any position
+            if (gamepad2.x) { setSlideBottomAbsolute(.6); }
 
         }
     }
@@ -152,7 +160,7 @@ public class Main extends LinearOpMode {
         }
 
         // Uncomment below if you want linear slides to just stop powering once you get to position
-        LinearSlide.setPower(0);
+        //LinearSlide.setPower(0);
         //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
@@ -160,7 +168,7 @@ public class Main extends LinearOpMode {
     public void setSlideMMAbsolute(int mm, double power) throws InterruptedException {
         // convert from MM to ticks
         // first convert from mm to rotations (mm / CIRCUMFERENCE) = rotations
-        // then convert from rotations to ticks ( rotations * TPR)
+        // then convert from rotations to ticks ( rotations * TPR
         int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * TPR);
         setSlideTicksAbsolute(ticksFromMM, power);
     }
