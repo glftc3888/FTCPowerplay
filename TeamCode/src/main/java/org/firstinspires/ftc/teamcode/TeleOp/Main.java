@@ -35,7 +35,7 @@ public class Main extends LinearOpMode {
     // Link for motor:
     // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     // Ticks Per Rotation (how many ticks in one full motor rotation)
-    private static final double TPR = (1+(46/17)) * (1+(46/11)) * 28;// ticks per revolution
+    private static final double TPR = (1+((double)46/17)) * (1+((double)46/11)) * 28;// ticks per revolution
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
@@ -81,9 +81,10 @@ public class Main extends LinearOpMode {
             // default to not having servo move (only move when triggered)
             setPowerServo(0);
 
-            /*int currentPosition = LinearSlide.getCurrentPosition();
+            int currentPosition = LinearSlide.getCurrentPosition();
             telemetry.addLine("CurrentPosition: " + currentPosition);
-            telemetry.update();*/
+            telemetry.update();
+
 
             //linear slides
             // height 1 (low junction)
@@ -93,7 +94,7 @@ public class Main extends LinearOpMode {
             if (gamepad2.b) { setSlideMMAbsolute(595, .6); }
 
             // height 3 (high junction)
-            if (gamepad2.y) { setSlideMMAbsolute(850, .6); }
+            if (gamepad2.y) { setSlideMMAbsolute(798, .6); }
 
             // down from any position
             if (gamepad2.x) { setSlideBottomAbsolute(.6); }

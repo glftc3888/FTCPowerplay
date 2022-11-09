@@ -14,7 +14,9 @@ public class SleeveDetection extends OpenCvPipeline {
     CYAN    = Parking Middle
     MAGENTA = Parking Right
      */
-
+    // Width and height for the bounding box
+    public static int REGION_WIDTH = 40;
+    public static int REGION_HEIGHT = 60;
 
     public enum ParkingPosition {
         LEFT,
@@ -23,20 +25,22 @@ public class SleeveDetection extends OpenCvPipeline {
     }
 
     // TOPLEFT anchor point for the bounding box
-    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(145, 168);
+    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(320/2 - REGION_WIDTH/2,240/2 - REGION_HEIGHT/2);
 
-    // Width and height for the bounding box
-    public static int REGION_WIDTH = 30*3;
-    public static int REGION_HEIGHT = 50*3;
+
 
     // Lower and upper boundaries for colors
     private static final Scalar
-            lower_yellow_bounds  = new Scalar(200, 200, 0, 255),
+            // 20 60 90
+            // lower cyan: leave at 0, 55, ~60 (super dark)
+            // lower yellow: 120, 80, 30
+            // lower magenta: 100, 20, 45
+            lower_yellow_bounds  = new Scalar(110, 70, 0, 255),
             upper_yellow_bounds  = new Scalar(255, 255, 130, 255),
-            lower_cyan_bounds    = new Scalar(0, 200, 200, 255),
+            lower_cyan_bounds    = new Scalar(0, 55, 60, 255),
             upper_cyan_bounds    = new Scalar(150, 255, 255, 255),
-            lower_magenta_bounds = new Scalar(170, 0, 170, 255),
-            upper_magenta_bounds = new Scalar(255, 60, 255, 255);
+            lower_magenta_bounds = new Scalar(90, 0, 40, 255),
+            upper_magenta_bounds = new Scalar(255, 120, 255, 255);
 
     // Color definitions
     private final Scalar
@@ -46,6 +50,9 @@ public class SleeveDetection extends OpenCvPipeline {
 
     // Percent and mat definitions
     private double yelPercent, cyaPercent, magPercent;
+
+    //telemetry
+    private Scalar avgScalar = new Scalar(0, 0, 0, 0);
     private Mat yelMat = new Mat(), cyaMat = new Mat(), magMat = new Mat(), blurredMat = new Mat(), kernel = new Mat();
 
     // Anchor point definitions
