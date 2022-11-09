@@ -40,6 +40,7 @@ public class Main extends LinearOpMode {
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
     private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
+    private int ZERO_TICKS_LINEAR_SLIDE = 10; // zero position of linear slides (not 0 due to overextension issues) - in ticks
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
     private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
@@ -72,18 +73,23 @@ public class Main extends LinearOpMode {
             backRightMotor.setPower((leftY - leftX + rightX)/2);
             backLeftMotor.setPower((leftY + leftX - rightX)/2);
 
-            //telemetry.addData("Status", "in");
-            //int pos = LinearSlide.getCurrentPosition();
-            //telemetry.addLine(String.valueOf(pos));
-            //telemetry.update();
+            // controlling linear slides and intake -- gamepad 2
 
-            // linear slide code testing
+            //servo intake, servo outtake
+            if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
+            if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
+            // default to not having servo move (only move when triggered)
+            setPowerServo(0);
 
-            /*if (gamepad1.a) {
-                setSlideMMAbsolute(500, .75);
-            }
+            /*int currentPosition = LinearSlide.getCurrentPosition();
+            telemetry.addLine("CurrentPosition: " + currentPosition);
+            telemetry.update();*/
 
-             */
+            //linear slides
+            // height 1
+            if (gamepad2.y) { setSlideMMAbsolute(600, .75); }
+            if (gamepad2.x) { setSlideBottomAbsolute(.8); }
+
         }
     }
 
@@ -131,20 +137,23 @@ public class Main extends LinearOpMode {
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
     public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
         // move BY difference between the positions the linear slide is at
-        int currentPosition = LinearSlide.getCurrentPosition();
-        int positionDifference = ticksPosition - currentPosition;
+        // int currentPosition = LinearSlide.getCurrentPosition();
+        //int positionDifference = ticksPosition - currentPosition;
 
         // move by that amount of ticks
         LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LinearSlide.setTargetPosition(positionDifference);
+        LinearSlide.setTargetPosition(ticksPosition);
         LinearSlide.setPower(power);
         LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         while(LinearSlide.isBusy()) {
+            telemetry.addLine("CurrentPosition: " + LinearSlide.getCurrentPosition());
+            telemetry.update();
         }
 
         // Uncomment below if you want linear slides to just stop powering once you get to position
-        //linearSlide.setPower(0);
-        //linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setPower(0);
+        //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     // set linear slide to certain tick position from MILLIMETER measurement upwards
@@ -154,6 +163,10 @@ public class Main extends LinearOpMode {
         // then convert from rotations to ticks ( rotations * TPR)
         int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * TPR);
         setSlideTicksAbsolute(ticksFromMM, power);
+    }
+    public void setSlideBottomAbsolute(double power) throws InterruptedException {
+        setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE, power);
+        LinearSlide.setPower(0);
     }
 
     public boolean isBusy() {
