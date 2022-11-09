@@ -10,10 +10,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
 
+import org.firstinspires.ftc.teamcode.TeleOp.Main;
+
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
 @Autonomous(name = "TestAuto", group = "Autonomous")
-public class TestAuto extends LinearOpMode {
+public class TestAuto extends Main {
 
     // Declaration of global variables
     private ElapsedTime runtime = new ElapsedTime();
@@ -41,7 +43,7 @@ public class TestAuto extends LinearOpMode {
     private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
-    private static final double circum = 2*PI*RADIUS;
+    private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
 
     private static boolean extended = false;
 
@@ -51,213 +53,22 @@ public class TestAuto extends LinearOpMode {
         telemetry.addData("Status", "Success!");
         telemetry.update();
 
-        // Setup hardware
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "back_left");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
-        backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
-
-        LinearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
-
-        leftServo = hardwareMap.get(CRServo.class, "left_servo");
-        rightServo = hardwareMap.get(CRServo.class, "right_servo");
-
-        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        //LinearSlide.setDirection(DcMotor.Direction.REVERSE);
-
-        //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        LinearSlide.setPower(0);
+        initRobot();
 
         // Wait for start
         waitForStart();
         runtime.reset();
 
+
         // DO THINGS -- BELOW
         //encoderForward(10, .2);
 
-        encoderForward(66.0, 0.2);
+        encoderForward(100.0, 0.2);
 
-        encoderStraffe(96.5, 0.2);
-
-        setSlideTicksAbsolute(500, 0.7);
-
-        moveServo();
-    }
-
-
-    // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
-    // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
-    public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException {
-        // move BY difference between the positions the linear slide is at
-        int currentPosition = LinearSlide.getCurrentPosition();
-        int positionDifference = ticksPosition - currentPosition;
-
-        // move by that amount of ticks
-        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LinearSlide.setTargetPosition(positionDifference);
-        LinearSlide.setPower(power);
-        LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (LinearSlide.isBusy()) {
-        }
-
-        // Uncomment below if you want linear slides to just stop powering once you get to position
-        //linearSlide.setPower(0);
-        //linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-    // set linear slide to certain tick position from MILLIMETER measurement upwards
-    /*
-    public void setSlideMMAbsolute(int mm, double power) throws InterruptedException {
-        // convert from MM to ticks
-        // first convert from mm to rotations (mm / CIRCUMFERENCE) = rotations
-        // then convert from rotations to ticks ( rotations * TPR)
-        int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * TPR);
-        setSlideTicksAbsolute(ticksFromMM, power);
-    }
-
-     */
-    public static boolean isBusy() {
-        return (frontLeftMotor.isBusy() || backLeftMotor.isBusy() || backRightMotor.isBusy() || frontRightMotor.isBusy());
-    }
-
-    public static void forward(double power) {
-        backLeftMotor.setPower(power);
-        backRightMotor.setPower(power);
-        frontRightMotor.setPower(power);
-        frontLeftMotor.setPower(power);
-    }
-
-    public static void stopRobot() {
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-    }
-
-    public static void turn(double power) {
-        frontLeftMotor.setPower(power);
-        backRightMotor.setPower(power);
-        frontRightMotor.setPower(-power);
-        backLeftMotor.setPower(-power);
-    }
-
-    public static void encoderForward(double cm, double power) {
-        int ticks = (int) ((cm / circum) * TPR);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        forward(power);
-
-        frontLeftMotor.setTargetPosition(-ticks);
-        frontRightMotor.setTargetPosition(-ticks);
-        backLeftMotor.setTargetPosition(-ticks);
-        backRightMotor.setTargetPosition(-ticks);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-        while(isBusy()){};
-
-        forward(0);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        //encoderStrafe(96.5, 0.2);
 
     }
 
-    public static void encoderStraffe(double cm, double power) {
-        // Fix the straffing encoders
-        // 1) It has to work
-        // 2) Since it's straffing it will move less than inches
-
-        double magic = 1 / (Math.sin(PI/4));
-        int ticks = (int) ((cm * magic / circum) * TPR);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        forward(power);
-
-        frontLeftMotor.setTargetPosition(-ticks);
-        frontRightMotor.setTargetPosition(ticks);
-        backLeftMotor.setTargetPosition(ticks);
-        backRightMotor.setTargetPosition(-ticks);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while(isBusy()){}
-
-        forward(0);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-    }
-    public void readEncoder(){
-        telemetry.addData("topLeft Encoder Ticks: ", frontLeftMotor.getCurrentPosition());
-        telemetry.addData("topRight Encoder Ticks: ", frontRightMotor.getCurrentPosition());
-        telemetry.addData("bottomLeft Encoder Ticks: ", backLeftMotor.getCurrentPosition());
-        telemetry.addData("bottomRight Encoder Ticks: ", backRightMotor.getCurrentPosition());
-        telemetry.update();
-    }
-
-    public void moveServo() {
-        if (extended) {
-            leftServo.setPower(-1);
-            rightServo.setPower(1);
-        } else {
-            leftServo.setPower(1);
-            rightServo.setPower(-1);
-        }
-
-        sleep(1000);
-
-        leftServo.setPower(0);
-        rightServo.setPower(0);
-    }
 }
 
 

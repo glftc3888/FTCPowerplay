@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 // Import modules
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,7 +23,10 @@ public class Main extends LinearOpMode {
     private DcMotor frontRightMotor = null;
     private DcMotor backRightMotor = null;
 
-    //private DcMotor LinearSlide = null;
+    private static CRServo leftServo = null;
+    private static CRServo rightServo = null;
+
+    private DcMotor LinearSlide = null;
 
     // will use later... This is for angle (see code from last year)
     BNO055IMU IMU;
@@ -31,11 +35,14 @@ public class Main extends LinearOpMode {
     // Link for motor:
     // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     // Ticks Per Rotation (how many ticks in one full motor rotation)
-    private double TPR = ((((1 + (46 / 17))) * (1 + (46 / 11))) * 28); // ticks per revolution
+    private static final double TPR = (1+(46/17)) * (1+(46/11)) * 28;// ticks per revolution
     // circumference of the pulley circle pulling the string in linear slides
-    private double CIRCUMFERENCE = 112; // in mm
+    private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
     private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
+    private static final double RADIUS = 4.8; // in cm
+    private static final double PI=3.1415926535;
+    private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,33 +52,7 @@ public class Main extends LinearOpMode {
         telemetry.addData("Status", "Success!");
         telemetry.update();
 
-        // Setup hardware
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
-        backLeftMotor = hardwareMap.get(DcMotor.class, "back_left");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
-        backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
-
-        //LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
-
-        //LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
-
-        // keep it reverse if you want positive ticks to move linear slide up
-        //LinearSlide.setDirection(DcMotor.Direction.REVERSE);
-
-        //when you're setting it up (in opMode)
-        //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontRightMotor.setPower(0);
+        initRobot();
 
         // Wait for start
         waitForStart();
@@ -90,6 +71,7 @@ public class Main extends LinearOpMode {
             frontRightMotor.setPower((leftY + leftX + rightX)/2);
             backRightMotor.setPower((leftY - leftX + rightX)/2);
             backLeftMotor.setPower((leftY + leftX - rightX)/2);
+
             //telemetry.addData("Status", "in");
             //int pos = LinearSlide.getCurrentPosition();
             //telemetry.addLine(String.valueOf(pos));
@@ -104,12 +86,50 @@ public class Main extends LinearOpMode {
              */
         }
     }
-}
+
+    public void initRobot(){
+        // Setup hardware
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "back_left");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
+        backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
+
+        LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+
+        leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
+        rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
+
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        // keep it reverse if you want positive ticks to move linear slide up
+        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
+
+        //when you're setting it up (in opMode)
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontRightMotor.setPower(0);
+
+        LinearSlide.setPower(0);
+    }
 
 
     // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
-    /*public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
+    public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
         // move BY difference between the positions the linear slide is at
         int currentPosition = LinearSlide.getCurrentPosition();
         int positionDifference = ticksPosition - currentPosition;
@@ -135,6 +155,120 @@ public class Main extends LinearOpMode {
         int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * TPR);
         setSlideTicksAbsolute(ticksFromMM, power);
     }
+
+    public boolean isBusy() {
+        return (frontLeftMotor.isBusy() || backLeftMotor.isBusy() || backRightMotor.isBusy() || frontRightMotor.isBusy());
+    }
+
+    public void forward(double power) {
+        backLeftMotor.setPower(power);
+        backRightMotor.setPower(power);
+        frontRightMotor.setPower(power);
+        frontLeftMotor.setPower(power);
+    }
+
+    public  void stopRobot() {
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+    }
+
+    public  void turn(double power) {
+        frontLeftMotor.setPower(power);
+        backRightMotor.setPower(power);
+        frontRightMotor.setPower(-power);
+        backLeftMotor.setPower(-power);
+    }
+
+    public  void encoderForward(double cm, double power) {
+        int ticks = (int) ((cm / WHEEL_CIRCUMFERENCE) * TPR);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        forward(power);
+
+        frontLeftMotor.setTargetPosition(-ticks);
+        frontRightMotor.setTargetPosition(-ticks);
+        backLeftMotor.setTargetPosition(-ticks);
+        backRightMotor.setTargetPosition(-ticks);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        while(isBusy()){};
+
+        forward(0);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+    }
+
+    public void encoderStrafe(double cm, double power) {
+        // Fix the straffing encoders
+        // 1) It has to work
+        // 2) Since it's straffing it will move less than inches
+
+        double magic = 1 / (Math.sin(PI/4));
+        int ticks = (int) ((cm * magic / WHEEL_CIRCUMFERENCE) * TPR);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        forward(power);
+
+        frontLeftMotor.setTargetPosition(-ticks);
+        frontRightMotor.setTargetPosition(ticks);
+        backLeftMotor.setTargetPosition(ticks);
+        backRightMotor.setTargetPosition(-ticks);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while(isBusy()){}
+
+        forward(0);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+    }
+    public void readEncoder(){
+        telemetry.addData("topLeft Encoder Ticks: ", frontLeftMotor.getCurrentPosition());
+        telemetry.addData("topRight Encoder Ticks: ", frontRightMotor.getCurrentPosition());
+        telemetry.addData("bottomLeft Encoder Ticks: ", backLeftMotor.getCurrentPosition());
+        telemetry.addData("bottomRight Encoder Ticks: ", backRightMotor.getCurrentPosition());
+        telemetry.update();
+    }
+
+    // set power of servo to (power)
+    public void setPowerServo(double power) {
+        leftServo.setPower(-power);
+        rightServo.setPower(power);
+    }
+
+    // move servo for certain amount of (milliseconds) with (power)
+    public void moveServo(long ms, double power) throws InterruptedException {
+        setPowerServo(power);
+        Thread.sleep(ms);
+        setPowerServo(0);
+    }
 }
 
-     */
