@@ -93,7 +93,7 @@ public class Main extends LinearOpMode {
             // height 2 (medium junction)
             if (gamepad2.b) { setSlideMMAbsolute(595, .6); }
 
-            // height 3 (high junction)
+            // height 3 (high junction) -- 850mm, but we can't go that much yet
             if (gamepad2.y) { setSlideMMAbsolute(798, .6); }
 
             // down from any position
