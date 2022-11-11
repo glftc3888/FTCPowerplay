@@ -71,7 +71,12 @@ public class Main extends LinearOpMode {
         while (opModeIsActive()) {
 
             // move mecanum drivetrain using gamepad values
-            setPowerMecanumGamepad();
+            if (gamepad1.left_trigger > .6f) {
+                setPowerMecanumGamepad(.25);
+            } else {
+                setPowerMecanumGamepad(.5);
+            }
+
 
             // controlling linear slides and intake -- gamepad 2
 
@@ -85,20 +90,23 @@ public class Main extends LinearOpMode {
             // NO LOCKING
             // if (gamepad2.left_stick_button) {lock = !lock;}
 
-            if (gamepad2.right_bumper) {
-                continousMode = !continousMode;
-            }
+            if (gamepad2.right_bumper) { continousMode = true; }
+            if (gamepad2.left_bumper) { continousMode = false; }
+
+            telemetry.addLine(String.valueOf(continousMode));
+            telemetry.update();
 
             // do things depending on states
             if (continousMode) {
-                telemetry.addLine("This telemetry is crucial for the structural integrity of this code.");
-                telemetry.update();
+                //telemetry.addLine("This telemetry is crucial for the structural integrity of this code.");
+                //telemetry.update();
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 position = LinearSlide.getCurrentPosition();
                 LinearSlide.setPower(-gamepad2.left_stick_y/2);
             }
             else {
-
+                //telemetry.addLine("non cont. mode");
+                //telemetry.update();
                 //linear slides
                 // height 1 (low junction)
                 if (gamepad2.a) {
@@ -165,16 +173,16 @@ public class Main extends LinearOpMode {
         LinearSlide.setPower(0);
     }
 
-    public void setPowerMecanumGamepad(){
+    public void setPowerMecanumGamepad(double constant){
         double leftX = gamepad1.left_stick_x;
         double leftY = gamepad1.left_stick_y;
         double rightX = gamepad1.right_stick_x;
         double rightY = gamepad1.right_stick_y;
 
-        frontLeftMotor.setPower((leftY - leftX - rightX)/2);
-        frontRightMotor.setPower((leftY + leftX + rightX)/2);
-        backRightMotor.setPower((leftY - leftX + rightX)/2);
-        backLeftMotor.setPower((leftY + leftX - rightX)/2);
+        frontLeftMotor.setPower((leftY - leftX - rightX) * constant);
+        frontRightMotor.setPower((leftY + leftX + rightX) * constant);
+        backRightMotor.setPower((leftY - leftX + rightX)* constant);
+        backLeftMotor.setPower((leftY + leftX - rightX)* constant);
     }
 
 
@@ -192,7 +200,14 @@ public class Main extends LinearOpMode {
         LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(LinearSlide.isBusy()) {
-            if (teleop) {setPowerMecanumGamepad();}
+            if (teleop) {
+                if (gamepad1.left_trigger > .6f) {
+                    setPowerMecanumGamepad(.25);
+                } else {
+                    setPowerMecanumGamepad(.5);
+                }
+
+            }
         }
 
         // Uncomment below if you want linear slides to just stop powering once you get to position
