@@ -18,20 +18,6 @@ public class AutoRight extends Main {
     // Declaration of global variables
     private ElapsedTime runtime = new ElapsedTime();
 
-    // roughly 537.7, but ((((1+(46/17))) * (1+(46/11))) * 28) to be exact (on the site)
-    // Link for motor:
-    // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
-    // Ticks Per Rotation (how many ticks in one full motor rotation)
-    private static final double TPR = (1+(46/17)) * (1+(46/11)) * 28;// ticks per revolution
-    // circumference of the pulley circle pulling the string in linear slides
-    private static final double CIRCUMFERENCE = 112; // in mm
-    // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
-    private static final double RADIUS = 4.8; // in cm
-    private static final double PI=3.1415926535;
-    private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
-
-
     // camera setup
     SleeveDetection sleeveDetection = new SleeveDetection();
     OpenCvCamera camera;
@@ -112,25 +98,24 @@ public class AutoRight extends Main {
         encoderForward(76.2-4, .3);
 
         // 36" left -> 91.44 cm
+        // EDIT FROM RIGHT: strafe is going right now
         encoderStrafe(-91.44, .2);
 
         // change to go to max junction later
         setSlideMaxAbsolute(.6);
 
-        // in case we need to align forward
-        // encoderForward(2.0, 0.2);
-
+        // experimental alternative version of autonomous
         // move forward to align with the pole
-        encoderForward(3, .2);
+        encoderForward(15, .2);
+
+        // bring the cone down into the pole (secure it)
+        setSlideTicksAbsolute(1000, .5);
 
         // move servo to outtake
-        moveServo(2000, .5);
+        moveServo(1500, .5);
 
-        // move backwards to be at the center
-        encoderForward(-3, .2);
-
-        // move backward just in case (not to bump into junction)
-        encoderForward(-2, 0.2);
+        // finish moving back
+        encoderForward(-15, .2);
 
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
         encoderStrafe(30.48 + 60.96 * pposition, 0.4);
