@@ -28,6 +28,8 @@ public class Main extends LinearOpMode {
 
     private DcMotor LinearSlide = null;
 
+    boolean teleop = false;
+
     // will use later... This is for angle (see code from last year)
     BNO055IMU IMU;
 
@@ -56,6 +58,8 @@ public class Main extends LinearOpMode {
         // Send success signal
         telemetry.addData("Status", "Success!");
         telemetry.update();
+
+        teleop = true;
 
         initRobot();
 
@@ -188,7 +192,7 @@ public class Main extends LinearOpMode {
         LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(LinearSlide.isBusy()) {
-            setPowerMecanumGamepad();
+            if (teleop) {setPowerMecanumGamepad();}
         }
 
         // Uncomment below if you want linear slides to just stop powering once you get to position
