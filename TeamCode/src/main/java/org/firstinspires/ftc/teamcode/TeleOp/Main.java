@@ -323,6 +323,10 @@ public class Main extends LinearOpMode {
         rightServo.setPower(power);
     }
 
+    public void setPowerLinearSlide(double power){
+        LinearSlide.setPower(power);
+    }
+
     // move servo for certain amount of (milliseconds) with (power)
     public void moveServo(long ms, double power) throws InterruptedException {
         setPowerServo(power);
