@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 // Import modules
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.TeleOp.Main;
@@ -15,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
-@Autonomous(name = "Auto", group = "Autonomous")
-public class Auto extends Main {
+@Autonomous(name = "AutoLeft", group = "Autonomous")
+public class AutoLeft extends Main {
 
     // Declaration of global variables
     private ElapsedTime runtime = new ElapsedTime();
@@ -77,7 +74,7 @@ public class Auto extends Main {
         runtime.reset();
 
         // sleep for a bit in order to wait for the camera to sense the color
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         // get parking position enum
         SleeveDetection.ParkingPosition parkingPosition;
@@ -112,10 +109,11 @@ public class Auto extends Main {
         // DO THINGS -- BELOW
 
         // 30" forward -> 76.2cm - 4cm (too much)
-        encoderForward(76.2-4, .4);
+        encoderForward(76.2-4, .3);
 
         // 36" left -> 91.44 cm
-        encoderStrafe(-91.44, .3);
+        // EDIT FROM RIGHT: strafe is going right now
+        encoderStrafe(91.44, .25);
 
         // change to go to max junction later
         setSlideMaxAbsolute(.6);
@@ -124,19 +122,21 @@ public class Auto extends Main {
         // encoderForward(2.0, 0.2);
 
         // move forward to align with the pole
-        encoderForward(5, .2);
+        encoderForward(7, .2);
 
         // move servo to outtake
         moveServo(1500, 1);
 
         // move backwards to be at the center
-        encoderForward(-5, .2);
+        encoderForward(-7, .2);
 
         // move backward just in case (not to bump into junction)
         encoderForward(-2, 0.2);
 
+        // EDIT FROM RIGHT: strafe is going left to go back
+        // EDIT FROM RIGHT: now we have to go
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
-        encoderStrafe(30.48 + 60.96 * pposition, 0.4);
+        encoderStrafe(-30.48 - 60.96 * (2-pposition), 0.4);
 
         // reset the linear slides to the position
         // wait for it to go slightly down due to gravity (so that it's smoother when it pulls down with power)
