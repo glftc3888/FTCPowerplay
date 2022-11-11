@@ -21,18 +21,6 @@ public class Auto extends Main {
     // Declaration of global variables
     private ElapsedTime runtime = new ElapsedTime();
 
-    private static DcMotor frontLeftMotor = null;
-    private static DcMotor backLeftMotor = null;
-    private static DcMotor frontRightMotor = null;
-    private static DcMotor backRightMotor = null;
-    private static CRServo leftServo = null;
-    private static CRServo rightServo = null;
-
-    private DcMotor LinearSlide = null;
-
-    // will use later... This is for angle (see code from last year)
-    BNO055IMU IMU;
-
     // roughly 537.7, but ((((1+(46/17))) * (1+(46/11))) * 28) to be exact (on the site)
     // Link for motor:
     // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
@@ -46,7 +34,6 @@ public class Auto extends Main {
     private static final double PI=3.1415926535;
     private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
 
-    private static boolean extended = false;
 
     // camera setup
     SleeveDetection sleeveDetection = new SleeveDetection();
@@ -125,10 +112,10 @@ public class Auto extends Main {
         // DO THINGS -- BELOW
 
         // 30" forward -> 76.2cm - 4cm (too much)
-        encoderForward(76.2-4, 0.15);
+        encoderForward(76.2-4, .4);
 
         // 36" left -> 91.44 cm
-        encoderStrafe(-91.44, 0.2);
+        encoderStrafe(-91.44, .3);
 
         // change to go to max junction later
         setSlideMaxAbsolute(.6);
@@ -136,14 +123,24 @@ public class Auto extends Main {
         // in case we need to align forward
         // encoderForward(2.0, 0.2);
 
+        // move forward to align with the pole
+        encoderForward(5, .2);
+
         // move servo to outtake
         moveServo(1500, 1);
+
+        // move backwards to be at the center
+        encoderForward(-5, .2);
 
         // move backward just in case (not to bump into junction)
         encoderForward(-2, 0.2);
 
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
-        encoderStrafe(30.48 + 60.96 * pposition, 0.2);
+        encoderStrafe(30.48 + 60.96 * pposition, 0.4);
+
+        // reset the linear slides to the position
+        // wait for it to go slightly down due to gravity (so that it's smoother when it pulls down with power)
+        setSlideBottomAbsolute(.5);
 
     }
 
