@@ -15,17 +15,18 @@ public class SleeveDetection extends OpenCvPipeline {
     MAGENTA = Parking Right
      */
     // Width and height for the bounding box
-    public static int REGION_WIDTH = 40;
-    public static int REGION_HEIGHT = 60;
+    public static int REGION_WIDTH = 50;
+    public static int REGION_HEIGHT = 70;
 
     public enum ParkingPosition {
         LEFT,
         CENTER,
-        RIGHT
+        RIGHT,
+        NOTHING,
     }
 
     // TOPLEFT anchor point for the bounding box
-    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(320/2 - REGION_WIDTH/2,240/2 - REGION_HEIGHT/2);
+    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(320/2 - REGION_WIDTH/3,240/2 - REGION_HEIGHT/2);
 
 
 
@@ -37,8 +38,8 @@ public class SleeveDetection extends OpenCvPipeline {
             // lower magenta: 100, 20, 45
             lower_yellow_bounds  = new Scalar(110, 70, 0, 255),
             upper_yellow_bounds  = new Scalar(255, 255, 130, 255),
-            lower_cyan_bounds    = new Scalar(0, 55, 60, 255),
-            upper_cyan_bounds    = new Scalar(150, 255, 255, 255),
+            lower_cyan_bounds    = new Scalar(0, 70, 70, 255),
+            upper_cyan_bounds    = new Scalar(130, 255, 255, 255),
             lower_magenta_bounds = new Scalar(90, 0, 40, 255),
             upper_magenta_bounds = new Scalar(255, 120, 255, 255);
 
@@ -64,7 +65,7 @@ public class SleeveDetection extends OpenCvPipeline {
             SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     // Running variable storing the parking position
-    private volatile ParkingPosition position = ParkingPosition.LEFT;
+    private volatile ParkingPosition position = ParkingPosition.NOTHING;
 
     @Override
     public Mat processFrame(Mat input) {

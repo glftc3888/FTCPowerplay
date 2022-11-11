@@ -39,11 +39,15 @@ public class Main extends LinearOpMode {
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
+    private int MAX_LINEAR_SLIDE_EXTENSION = 4080; // in ticks
     private int ZERO_TICKS_LINEAR_SLIDE = 10; // zero position of linear slides (not 0 due to overextension issues) - in ticks
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
     private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
+
+    boolean continousMode = false;
+    int position = 0;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -61,17 +65,9 @@ public class Main extends LinearOpMode {
 
         // Start of OpMode
         while (opModeIsActive()) {
-            // Power up the motors using left and right sticks
-            double leftX = gamepad1.left_stick_x;
-            double leftY = gamepad1.left_stick_y;
-            double rightX = gamepad1.right_stick_x;
-            double rightY = gamepad1.right_stick_y;
 
-            // move mecanum drivetrain
-            frontLeftMotor.setPower((leftY - leftX - rightX)/2);
-            frontRightMotor.setPower((leftY + leftX + rightX)/2);
-            backRightMotor.setPower((leftY - leftX + rightX)/2);
-            backLeftMotor.setPower((leftY + leftX - rightX)/2);
+            // move mecanum drivetrain using gamepad values
+            setPowerMecanumGamepad();
 
             // controlling linear slides and intake -- gamepad 2
 
@@ -81,23 +77,47 @@ public class Main extends LinearOpMode {
             // default to not having servo move (only move when triggered)
             setPowerServo(0);
 
-            int currentPosition = LinearSlide.getCurrentPosition();
-            telemetry.addLine("CurrentPosition: " + currentPosition);
-            telemetry.update();
+            // state variables (switching between them)
+            // NO LOCKING
+            // if (gamepad2.left_stick_button) {lock = !lock;}
 
+            if (gamepad2.right_bumper) {
+                continousMode = !continousMode;
+            }
 
-            //linear slides
-            // height 1 (low junction)
-            if (gamepad2.a) { setSlideMMAbsolute(350, .6); }
+            // do things depending on states
+            if (continousMode) {
+                telemetry.addLine("This telemetry is crucial for the structural integrity of this code.");
+                telemetry.update();
+                LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                position = LinearSlide.getCurrentPosition();
+                LinearSlide.setPower(-gamepad2.left_stick_y/2);
+            }
+            else {
 
-            // height 2 (medium junction)
-            if (gamepad2.b) { setSlideMMAbsolute(595, .6); }
+                //linear slides
+                // height 1 (low junction)
+                if (gamepad2.a) {
+                    setSlideMMAbsolute(350, .6);
+                }
 
-            // height 3 (high junction) -- 850mm, but we can't go that much yet
-            if (gamepad2.y) { setSlideMMAbsolute(798, .6); }
+                // height 2 (medium junction)
+                if (gamepad2.b) {
+                    setSlideMMAbsolute(595, .6);
+                }
 
-            // down from any position
-            if (gamepad2.x) { setSlideBottomAbsolute(.6); }
+                // height 3 (high junction) -- 850mm, but we can't go that much yet
+                if (gamepad2.y) {
+                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, .6);
+                }
+
+                // down from any position
+                if (gamepad2.x) {
+                    setSlideBottomAbsolute(.6);
+                }
+
+            }
+
 
         }
     }
@@ -141,6 +161,18 @@ public class Main extends LinearOpMode {
         LinearSlide.setPower(0);
     }
 
+    public void setPowerMecanumGamepad(){
+        double leftX = gamepad1.left_stick_x;
+        double leftY = gamepad1.left_stick_y;
+        double rightX = gamepad1.right_stick_x;
+        double rightY = gamepad1.right_stick_y;
+
+        frontLeftMotor.setPower((leftY - leftX - rightX)/2);
+        frontRightMotor.setPower((leftY + leftX + rightX)/2);
+        backRightMotor.setPower((leftY - leftX + rightX)/2);
+        backLeftMotor.setPower((leftY + leftX - rightX)/2);
+    }
+
 
     // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
@@ -156,8 +188,7 @@ public class Main extends LinearOpMode {
         LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(LinearSlide.isBusy()) {
-            telemetry.addLine("CurrentPosition: " + LinearSlide.getCurrentPosition());
-            telemetry.update();
+            setPowerMecanumGamepad();
         }
 
         // Uncomment below if you want linear slides to just stop powering once you get to position
@@ -176,6 +207,11 @@ public class Main extends LinearOpMode {
     public void setSlideBottomAbsolute(double power) throws InterruptedException {
         setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE, power);
         LinearSlide.setPower(0);
+    }
+
+
+    public void setSlideMaxAbsolute(double power) throws InterruptedException {
+        setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, power);
     }
 
     public boolean isBusy() {
@@ -224,7 +260,7 @@ public class Main extends LinearOpMode {
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        while(isBusy()){};
+        while(isBusy()){ readEncoder(); };
 
         forward(0);
 
@@ -241,8 +277,9 @@ public class Main extends LinearOpMode {
         // 1) It has to work
         // 2) Since it's straffing it will move less than inches
 
-        double magic = 1 / (Math.sin(PI/4));
-        int ticks = (int) ((cm * magic / WHEEL_CIRCUMFERENCE) * TPR);
+        double EXPERIMENTAL_CIRCUMFERENCE = 27.75;
+        //int ticks = (int) ((cm / WHEEL_CIRCUMFERENCE) * TPR);
+        int ticks = (int) ((cm / EXPERIMENTAL_CIRCUMFERENCE) * TPR);
 
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

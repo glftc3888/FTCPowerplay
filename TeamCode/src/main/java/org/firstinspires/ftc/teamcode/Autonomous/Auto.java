@@ -7,11 +7,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.TeleOp.Main;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
-@Autonomous(name = "TestAuto", group = "Autonomous")
+@Autonomous(name = "Auto", group = "Autonomous")
 public class Auto extends Main {
 
     // Declaration of global variables
@@ -44,22 +48,75 @@ public class Auto extends Main {
 
     private static boolean extended = false;
 
+    // camera setup
+    SleeveDetection sleeveDetection = new SleeveDetection();
+    OpenCvCamera camera;
+    String webcamName = "Webcam 1";
+
     @Override
     public void runOpMode() throws InterruptedException {
         // Send success signal
         telemetry.addData("Status", "Success!");
         telemetry.update();
 
+        // setup for the camera
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
+        camera.setPipeline(sleeveDetection);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {}
+        });
+
+        // no need for waitForStart() with while loop
+        while (!isStarted()) {
+            telemetry.addData("ROTATION: ", sleeveDetection.getPosition());
+            telemetry.addData("YEL: ", sleeveDetection.yelPercent());
+            telemetry.addData("CYA: ", sleeveDetection.cyaPercent());
+            telemetry.addData("MAG: ", sleeveDetection.magPercent());
+            telemetry.update();
+        }
+
+
         initRobot();
-
-        SleeveDetection.ParkingPosition parkingPosition;
-        SleeveDetection sleeveDetection = new SleeveDetection();
-
-        // Wait for start
-        waitForStart();
         runtime.reset();
 
-        parkingPosition = sleeveDetection.getPosition();
+        // sleep for a bit in order to wait for the camera to sense the color
+        Thread.sleep(2000);
+
+        // get parking position enum
+        SleeveDetection.ParkingPosition parkingPosition;
+
+        // camera code
+        int pposition = -1;
+        while (pposition == -1) {
+            parkingPosition = sleeveDetection.getPosition();
+            switch (parkingPosition) {
+                case LEFT:
+                    pposition = 0;
+                    break;
+                case CENTER:
+                    pposition = 1;
+                    break;
+                case RIGHT:
+                    pposition = 2;
+                    break;
+                case NOTHING: // default, keep at -1
+                    pposition = -1;
+                    break;
+            }
+        }
+
+        telemetry.addLine(String.valueOf(pposition));
+        telemetry.update();
 
         // LEFT, CENTER, RIGHT --> 0, 1, 2   = 'parkingPosition' object
 
@@ -67,19 +124,26 @@ public class Auto extends Main {
 
         // DO THINGS -- BELOW
 
-        encoderForward(66.0, 0.2);
+        // 30" forward -> 76.2cm - 4cm (too much)
+        encoderForward(76.2-4, 0.15);
 
-        encoderStrafe(-110.0, 0.2);
+        // 36" left -> 91.44 cm
+        encoderStrafe(-91.44, 0.2);
 
-        setSlideMMAbsolute(820, .6);
+        // change to go to max junction later
+        setSlideMaxAbsolute(.6);
 
-        encoderForward(2.0, 0.2);
+        // in case we need to align forward
+        // encoderForward(2.0, 0.2);
 
-        moveServo(800, 1);
+        // move servo to outtake
+        moveServo(1500, 1);
 
-        encoderForward(-2.0, 0.2);
+        // move backward just in case (not to bump into junction)
+        encoderForward(-2, 0.2);
 
-        encoderStrafe(130, 0.2);
+        // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
+        encoderStrafe(30.48 + 60.96 * pposition, 0.2);
 
     }
 
