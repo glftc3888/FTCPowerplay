@@ -72,11 +72,12 @@ public class Main extends LinearOpMode {
 
             // move mecanum drivetrain using gamepad values
             if (gamepad1.left_trigger > .6f) {
-                setPowerMecanumGamepad(.25);
+                setPowerMecanumGamepad(.125);
+            } else if (gamepad1.right_trigger > .6f) { // superspeed mode
+                setPowerMecanumGamepad(.8);
             } else {
                 setPowerMecanumGamepad(.5);
             }
-
 
             // controlling linear slides and intake -- gamepad 2
 
@@ -202,7 +203,9 @@ public class Main extends LinearOpMode {
         while(LinearSlide.isBusy()) {
             if (teleop) {
                 if (gamepad1.left_trigger > .6f) {
-                    setPowerMecanumGamepad(.25);
+                    setPowerMecanumGamepad(.125);
+                } else if (gamepad1.right_trigger > .6f) { // superspeed mode
+                    setPowerMecanumGamepad(.8);
                 } else {
                     setPowerMecanumGamepad(.5);
                 }
