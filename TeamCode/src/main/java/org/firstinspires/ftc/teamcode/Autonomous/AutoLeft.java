@@ -113,7 +113,7 @@ public class AutoLeft extends Main {
 
         // 36" left -> 91.44 cm
         // EDIT FROM RIGHT: strafe is going right now
-        encoderStrafe(91.44 - 3, .2);
+        encoderStrafe(91.44 + 1.5, .2);
 
         // change to go to max junction later
         setSlideMaxAbsolute(.6);
@@ -122,7 +122,7 @@ public class AutoLeft extends Main {
         // encoderForward(2.0, 0.2);
 
         // move forward to align with the pole
-        encoderForward(4, .2);
+        encoderForward(4 + 2, .2);
 
         // move servo to outtake
         moveServo(3000, .5);
@@ -131,12 +131,12 @@ public class AutoLeft extends Main {
         encoderForward(-4, .2);
 
         // move backward just in case (not to bump into junction)
-        encoderForward(-2, 0.2);
+        encoderForward(-2 - 2, 0.2);
 
         // EDIT FROM RIGHT: strafe is going left to go back
         // EDIT FROM RIGHT: now we have to go
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
-        encoderStrafe(-30.48 - 60.96 * (2-pposition) + 3, 0.4);
+        encoderStrafe(-30.48 - 60.96 * (2-pposition) - 1.5, 0.4);
 
         // reset the linear slides to the position
         // wait for it to go slightly down due to gravity (so that it's smoother when it pulls down with power)
