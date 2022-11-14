@@ -132,6 +132,7 @@ public class AutoRight extends Main {
         // move backward just in case (not to bump into junction)
         encoderForward(-2 - 2, 0.2);
 
+
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
         encoderStrafe(30.48 + 60.96 * pposition + 3, 0.4);
 

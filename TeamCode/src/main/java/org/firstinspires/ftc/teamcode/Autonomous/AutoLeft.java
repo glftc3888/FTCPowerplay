@@ -133,6 +133,15 @@ public class AutoLeft extends Main {
         // move backward just in case (not to bump into junction)
         encoderForward(-2 - 2, 0.2);
 
+        //
+        encoderStrafe(152.4, .4);
+
+        //
+        encoderForward(60.96, .4);
+
+        //
+
+
         // EDIT FROM RIGHT: strafe is going left to go back
         // EDIT FROM RIGHT: now we have to go
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM

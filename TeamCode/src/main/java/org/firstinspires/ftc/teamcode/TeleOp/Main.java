@@ -209,6 +209,8 @@ public class Main extends LinearOpMode {
                 } else {
                     setPowerMecanumGamepad(.5);
                 }
+                if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
+                if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
 
             }
         }
@@ -330,6 +332,34 @@ public class Main extends LinearOpMode {
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
+    }
+
+    public void encoderTurn(double angle) {
+
+        double percent = angle / 360;
+
+        double roboRadius = Math.sqrt(Math.pow(8.05,2) + Math.pow(7.0, 2));
+
+        double circumference = roboRadius * 2 * Math.PI;
+
+        double distance = percent * circumference;
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     public void readEncoder(){
         telemetry.addData("topLeft Encoder Ticks: ", frontLeftMotor.getCurrentPosition());
