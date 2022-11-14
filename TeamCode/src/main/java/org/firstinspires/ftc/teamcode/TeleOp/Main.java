@@ -5,9 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
@@ -46,9 +52,12 @@ public class Main extends LinearOpMode {
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
     private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
+    private BNO055IMU imu;
+    private Orientation angles;
 
     boolean continousMode = false;
     int position = 0;
+    private BNO055IMU Gyro;
 
 
     @Override
@@ -146,6 +155,15 @@ public class Main extends LinearOpMode {
 
         leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
         rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
+
+        Gyro = hardwareMap.get(BNO055IMU.class, "Gyro");
+
+        Orientation orient = new Orientation();
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        Gyro.initialize(parameters); // init the gyro
+        telemetry.addData("Calibrating Gyro: ", Gyro.getCalibrationStatus().toString());
+        telemetry.addData("Gyro ready?: ", Gyro.isGyroCalibrated());
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -256,13 +274,6 @@ public class Main extends LinearOpMode {
         frontRightMotor.setPower(0);
     }
 
-    public  void turn(double power) {
-        frontLeftMotor.setPower(power);
-        backRightMotor.setPower(power);
-        frontRightMotor.setPower(-power);
-        backLeftMotor.setPower(-power);
-    }
-
     public  void encoderForward(double cm, double power) {
         int ticks = (int) ((cm / WHEEL_CIRCUMFERENCE) * TPR);
 
@@ -334,6 +345,44 @@ public class Main extends LinearOpMode {
 
     }
 
+    public double getAngle(double angle){
+        if(angle<0){
+            return Math.abs(angle);
+        }
+        else if(angle>360){
+            return Math.abs(angle) - 360;
+        }
+        else{
+            return 360 - angle;
+        }
+    }
+    public boolean rightorleft(int angle){
+        if(Math.abs(Gyro.getAngularOrientation().firstAngle - angle)>180)
+            return true;
+        else
+            return false;
+    }
+
+    public void turngyro(int angle) {
+        //double heading = imu.getAngularOrientation().firstAngle;
+        if (Math.abs(getAngle(Gyro.getAngularOrientation().firstAngle) - angle) != 0) {
+            if (angle == 0) {
+                telemetry.addData("Current angle: ", Gyro.getAngularOrientation().firstAngle);
+            } else if (rightorleft(angle)) {
+                frontLeftMotor.setPower(-0.35);
+                frontRightMotor.setPower(0.35);
+                backLeftMotor.setPower(-0.35);
+                backRightMotor.setPower(0.35);
+            } else {
+                frontLeftMotor.setPower(0.35);
+                frontRightMotor.setPower(-0.35);
+                backLeftMotor.setPower(0.35);
+                backRightMotor.setPower(-0.35);
+            }
+        }
+    }
+
+    /*
     public void encoderTurn(double angle) {
 
         double percent = angle / 360;
@@ -361,6 +410,8 @@ public class Main extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
+     */
     public void readEncoder(){
         telemetry.addData("topLeft Encoder Ticks: ", frontLeftMotor.getCurrentPosition());
         telemetry.addData("topRight Encoder Ticks: ", frontRightMotor.getCurrentPosition());

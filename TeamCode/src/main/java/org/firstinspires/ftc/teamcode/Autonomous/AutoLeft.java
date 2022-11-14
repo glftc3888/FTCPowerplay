@@ -141,6 +141,7 @@ public class AutoLeft extends Main {
 
         //
 
+        turngyro(180);
 
         // EDIT FROM RIGHT: strafe is going left to go back
         // EDIT FROM RIGHT: now we have to go
