@@ -124,7 +124,7 @@ public class AutoRight extends Main {
         encoderForward(4 + 2, .2);
 
         // move servo to outtake
-        moveServo(2000, .5);
+        //moveServo(2000, .5);
 
         // move backwards to be at the center
         encoderForward(-4, .2);

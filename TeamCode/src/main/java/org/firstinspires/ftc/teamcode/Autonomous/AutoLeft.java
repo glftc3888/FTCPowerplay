@@ -125,7 +125,7 @@ public class AutoLeft extends Main {
         encoderForward(4 + 2, .2);
 
         // move servo to outtake
-        moveServo(3000, .5);
+        //moveServo(3000, .5);
 
         // move backwards to be at the center
         encoderForward(-4, .2);
@@ -141,7 +141,7 @@ public class AutoLeft extends Main {
 
         //
 
-        turngyro(180);
+
 
         // EDIT FROM RIGHT: strafe is going left to go back
         // EDIT FROM RIGHT: now we have to go

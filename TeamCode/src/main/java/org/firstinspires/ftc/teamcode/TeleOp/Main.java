@@ -29,8 +29,8 @@ public class Main extends LinearOpMode {
     private DcMotor frontRightMotor = null;
     private DcMotor backRightMotor = null;
 
-    private static CRServo leftServo = null;
-    private static CRServo rightServo = null;
+    //private static CRServo leftServo = null;
+    //private static CRServo rightServo = null;
 
     private DcMotor LinearSlide = null;
 
@@ -52,12 +52,13 @@ public class Main extends LinearOpMode {
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
     private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
-    private BNO055IMU imu;
-    private Orientation angles;
+    BNO055IMU imu;
+    Orientation lastAngles;
+    double globalAngle;
 
     boolean continousMode = false;
     int position = 0;
-    private BNO055IMU Gyro;
+    //private BNO055IMU Gyro;
 
 
     @Override
@@ -91,10 +92,10 @@ public class Main extends LinearOpMode {
             // controlling linear slides and intake -- gamepad 2
 
             //servo intake, servo outtake
-            if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
-            if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
+            //if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
+            //if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
             // default to not having servo move (only move when triggered)
-            setPowerServo(0);
+            //setPowerServo(0);
 
             // state variables (switching between them)
             // NO LOCKING
@@ -138,6 +139,10 @@ public class Main extends LinearOpMode {
                     setSlideBottomAbsolute(.6);
                 }
 
+                if (gamepad1.a) {
+                    turnHeading(180);
+                }
+
             }
 
 
@@ -153,17 +158,18 @@ public class Main extends LinearOpMode {
 
         LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
 
-        leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
-        rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
+        //leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
+        //rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
 
-        Gyro = hardwareMap.get(BNO055IMU.class, "Gyro");
+
+        imu = hardwareMap.get(BNO055IMU.class, "Gyro");
 
         Orientation orient = new Orientation();
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        Gyro.initialize(parameters); // init the gyro
-        telemetry.addData("Calibrating Gyro: ", Gyro.getCalibrationStatus().toString());
-        telemetry.addData("Gyro ready?: ", Gyro.isGyroCalibrated());
+        imu.initialize(parameters); // init the gyro
+        telemetry.addData("Calibrating imu: ", imu.getCalibrationStatus().toString());
+        telemetry.addData("imu ready?: ", imu.isGyroCalibrated());
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -190,6 +196,10 @@ public class Main extends LinearOpMode {
         frontRightMotor.setPower(0);
 
         LinearSlide.setPower(0);
+
+        lastAngles = new Orientation();
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
     }
 
     public void setPowerMecanumGamepad(double constant){
@@ -227,8 +237,8 @@ public class Main extends LinearOpMode {
                 } else {
                     setPowerMecanumGamepad(.5);
                 }
-                if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
-                if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
+                //if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
+                //if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
 
             }
         }
@@ -345,6 +355,42 @@ public class Main extends LinearOpMode {
 
     }
 
+    public double getAngle(){
+        Orientation angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+
+    public void turnHeading(double angle) throws InterruptedException {
+        turnHeading(angle,0.5f);
+    }
+
+    public void turnHeading(double angle, double pow) throws InterruptedException {
+        double power = pow;
+        double m_P = 5.5;
+        double tol = 2.5;
+
+        double err = (angle-this.getAngle());
+
+        double prop = err/angle;
+
+        while(opModeIsActive() && Math.abs(err)>tol){
+            power = (m_P*prop);
+
+            backRightMotor.setPower(-power);
+            frontRightMotor.setPower(-power);
+
+            frontLeftMotor.setPower(power);
+            backLeftMotor.setPower(power);
+
+            err = (angle-this.getAngle());
+            telemetry.addLine(String.valueOf(this.getAngle()));
+            telemetry.addData("Calibrating imu: ", imu.getCalibrationStatus().toString());
+            telemetry.addData("imu reset?: ", imu.isGyroCalibrated());
+            telemetry.update();
+        }
+    }
+
+    /*
     public double getAngle(double angle){
         if(angle<0){
             return Math.abs(angle);
@@ -365,7 +411,7 @@ public class Main extends LinearOpMode {
 
     public void turngyro(int angle) {
         //double heading = imu.getAngularOrientation().firstAngle;
-        if (Math.abs(getAngle(Gyro.getAngularOrientation().firstAngle) - angle) != 0) {
+        while (Math.abs(getAngle(Gyro.getAngularOrientation().firstAngle) - angle) != 0) {
             if (angle == 0) {
                 telemetry.addData("Current angle: ", Gyro.getAngularOrientation().firstAngle);
             } else if (rightorleft(angle)) {
@@ -374,13 +420,19 @@ public class Main extends LinearOpMode {
                 backLeftMotor.setPower(-0.35);
                 backRightMotor.setPower(0.35);
             } else {
-                frontLeftMotor.setPower(0.35);
-                frontRightMotor.setPower(-0.35);
-                backLeftMotor.setPower(0.35);
-                backRightMotor.setPower(-0.35);
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
             }
+
         }
     }
+
+     */
+
+
+
 
     /*
     public void encoderTurn(double angle) {
@@ -421,20 +473,25 @@ public class Main extends LinearOpMode {
     }
 
     // set power of servo to (power)
+    /*
     public void setPowerServo(double power) {
         leftServo.setPower(-power);
         rightServo.setPower(power);
     }
+     */
 
     public void setPowerLinearSlide(double power){
         LinearSlide.setPower(power);
     }
 
+    /*
     // move servo for certain amount of (milliseconds) with (power)
     public void moveServo(long ms, double power) throws InterruptedException {
         setPowerServo(power);
         Thread.sleep(ms);
         setPowerServo(0);
     }
+
+     */
 }
 
