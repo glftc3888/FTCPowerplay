@@ -116,7 +116,7 @@ public class AutoLeft extends Main {
         encoderStrafe(91.44 + 1.5, .2);
 
         // change to go to max junction later
-        setSlideMaxAbsolute(.6);
+        //setSlideMaxAbsolute(.6);
 
         // in case we need to align forward
         // encoderForward(2.0, 0.2);
@@ -150,7 +150,7 @@ public class AutoLeft extends Main {
 
         // reset the linear slides to the position
         // wait for it to go slightly down due to gravity (so that it's smoother when it pulls down with power)
-        setSlideBottomAbsolute(.75);
+        //setSlideBottomAbsolute(.75);
 
 
     }

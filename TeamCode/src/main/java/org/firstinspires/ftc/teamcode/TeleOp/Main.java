@@ -32,7 +32,7 @@ public class Main extends LinearOpMode {
     //private static CRServo leftServo = null;
     //private static CRServo rightServo = null;
 
-    private DcMotor LinearSlide = null;
+    //private DcMotor LinearSlide = null;
 
     boolean teleop = false;
 
@@ -108,6 +108,7 @@ public class Main extends LinearOpMode {
             telemetry.update();
 
             // do things depending on states
+            /*
             if (continousMode) {
                 //telemetry.addLine("This telemetry is crucial for the structural integrity of this code.");
                 //telemetry.update();
@@ -139,14 +140,14 @@ public class Main extends LinearOpMode {
                     setSlideBottomAbsolute(.6);
                 }
 
+             */
+
                 if (gamepad1.a) {
-                    turnHeading(180);
+                    turnHeading(90, .5f);
+                    sleep(10000);
+                    turnHeading(0, .5f);
                 }
-
             }
-
-
-        }
     }
 
     public void initRobot(){
@@ -156,7 +157,7 @@ public class Main extends LinearOpMode {
         frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
         backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
 
-        LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+        //LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
 
         //leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
         //rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
@@ -176,7 +177,7 @@ public class Main extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -184,18 +185,18 @@ public class Main extends LinearOpMode {
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // keep it reverse if you want positive ticks to move linear slide up
-        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
+        //LinearSlide.setDirection(DcMotor.Direction.REVERSE);
 
         //when you're setting it up (in opMode)
-        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontRightMotor.setPower(0);
 
-        LinearSlide.setPower(0);
+        //LinearSlide.setPower(0);
 
         lastAngles = new Orientation();
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -223,11 +224,12 @@ public class Main extends LinearOpMode {
         //int positionDifference = ticksPosition - currentPosition;
 
         // move by that amount of ticks
-        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LinearSlide.setTargetPosition(ticksPosition);
-        LinearSlide.setPower(power);
-        LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //LinearSlide.setTargetPosition(ticksPosition);
+        //LinearSlide.setPower(power);
+        //LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        /*
         while(LinearSlide.isBusy()) {
             if (teleop) {
                 if (gamepad1.left_trigger > .6f) {
@@ -243,6 +245,8 @@ public class Main extends LinearOpMode {
             }
         }
 
+         */
+
         // Uncomment below if you want linear slides to just stop powering once you get to position
         //LinearSlide.setPower(0);
         //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -256,6 +260,7 @@ public class Main extends LinearOpMode {
         int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * TPR);
         setSlideTicksAbsolute(ticksFromMM, power);
     }
+    /*
     public void setSlideBottomAbsolute(double power) throws InterruptedException {
         setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE, power);
         LinearSlide.setPower(0);
@@ -265,6 +270,8 @@ public class Main extends LinearOpMode {
     public void setSlideMaxAbsolute(double power) throws InterruptedException {
         setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, power);
     }
+
+     */
 
     public boolean isBusy() {
         return (frontLeftMotor.isBusy() || backLeftMotor.isBusy() || backRightMotor.isBusy() || frontRightMotor.isBusy());
@@ -360,18 +367,14 @@ public class Main extends LinearOpMode {
         return angles.firstAngle;
     }
 
-    public void turnHeading(double angle) throws InterruptedException {
-        turnHeading(angle,0.5f);
-    }
-
     public void turnHeading(double angle, double pow) throws InterruptedException {
         double power = pow;
-        double m_P = 5.5;
+        double m_P = 5;
         double tol = 2.5;
 
         double err = (angle-this.getAngle());
 
-        double prop = err/angle;
+        double prop = err/180;
 
         while(opModeIsActive() && Math.abs(err)>tol){
             power = (m_P*prop);
@@ -384,10 +387,9 @@ public class Main extends LinearOpMode {
 
             err = (angle-this.getAngle());
             telemetry.addLine(String.valueOf(this.getAngle()));
-            telemetry.addData("Calibrating imu: ", imu.getCalibrationStatus().toString());
-            telemetry.addData("imu reset?: ", imu.isGyroCalibrated());
             telemetry.update();
         }
+
     }
 
     /*
@@ -480,9 +482,9 @@ public class Main extends LinearOpMode {
     }
      */
 
-    public void setPowerLinearSlide(double power){
-        LinearSlide.setPower(power);
-    }
+    //public void setPowerLinearSlide(double power){
+    //    LinearSlide.setPower(power);
+    //}
 
     /*
     // move servo for certain amount of (milliseconds) with (power)

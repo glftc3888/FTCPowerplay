@@ -49,7 +49,7 @@ public class gyrotesting extends Main {
         // sleep for a bit in order to wait for the camera to sense the color
         Thread.sleep(1000);
 
-        turnHeading(180);
+        turnHeading(180, .5f);
 
     }
 
