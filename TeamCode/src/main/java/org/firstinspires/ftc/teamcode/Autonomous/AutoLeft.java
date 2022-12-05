@@ -116,7 +116,7 @@ public class AutoLeft extends Main {
         encoderStrafe(91.44 + 1.5, .2);
 
         // change to go to max junction later
-        //setSlideMaxAbsolute(.6);
+        setSlideMaxAbsolute(.8);
 
         // in case we need to align forward
         // encoderForward(2.0, 0.2);
@@ -125,7 +125,7 @@ public class AutoLeft extends Main {
         encoderForward(4 + 2, .2);
 
         // move servo to outtake
-        //moveServo(3000, .5);
+        moveServo(3000, .5);
 
         // move backwards to be at the center
         encoderForward(-4, .2);
@@ -140,17 +140,47 @@ public class AutoLeft extends Main {
         encoderForward(60.96, .4);
 
         //
+        encoderStrafe(-30.48, .4);
+        //
+        encoderForward(60.96, .4);
+        //
+        turnHeading(180, 0.4);
+        //
+        encoderForward(121.92, 0.4);
+
+        setSlideMMAbsolute(152,0.8);
+
+        encoderForward(1,0.4);
+
+        moveServo(3000, -.5);
+
+        setSlideMMAbsolute(100,0.8);
+
+        encoderForward(-122.92,0.4);
+
+        encoderStrafe(30.48, 0.4);
+
+        setSlideTicksAbsolute(4080, .6);
+
+        moveServo(3000, .5);
+
+        setSlideBottomAbsolute(.75);
+
+        encoderStrafe(-30.48, .4);
+
+
 
 
 
         // EDIT FROM RIGHT: strafe is going left to go back
         // EDIT FROM RIGHT: now we have to go
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
-        encoderStrafe(-30.48 - 60.96 * (2-pposition) - 1.5, 0.4);
+        encoderForward(-30.48 - 60.96 * (2-pposition) - 1.5, 0.4);
 
         // reset the linear slides to the position
         // wait for it to go slightly down due to gravity (so that it's smoother when it pulls down with power)
-        //setSlideBottomAbsolute(.75);
+        setSlideBottomAbsolute(.75);
+
 
 
     }

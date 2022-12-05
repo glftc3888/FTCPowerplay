@@ -29,8 +29,8 @@ public class Main extends LinearOpMode {
     private DcMotor frontRightMotor = null;
     private DcMotor backRightMotor = null;
 
-    //private static CRServo leftServo = null;
-    //private static CRServo rightServo = null;
+    private static CRServo leftServo = null;
+    private static CRServo rightServo = null;
 
     //private DcMotor LinearSlide = null;
 
@@ -92,10 +92,10 @@ public class Main extends LinearOpMode {
             // controlling linear slides and intake -- gamepad 2
 
             //servo intake, servo outtake
-            //if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
-            //if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
+            if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
+            if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
             // default to not having servo move (only move when triggered)
-            //setPowerServo(0);
+            setPowerServo(0);
 
             // state variables (switching between them)
             // NO LOCKING
@@ -159,8 +159,8 @@ public class Main extends LinearOpMode {
 
         //LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
 
-        //leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
-        //rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
+        leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
+        rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
 
 
         imu = hardwareMap.get(BNO055IMU.class, "Gyro");
@@ -239,8 +239,8 @@ public class Main extends LinearOpMode {
                 } else {
                     setPowerMecanumGamepad(.5);
                 }
-                //if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
-                //if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
+                if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
+                if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
 
             }
         }
@@ -475,18 +475,18 @@ public class Main extends LinearOpMode {
     }
 
     // set power of servo to (power)
-    /*
+
     public void setPowerServo(double power) {
         leftServo.setPower(-power);
         rightServo.setPower(power);
     }
-     */
+
 
     //public void setPowerLinearSlide(double power){
     //    LinearSlide.setPower(power);
     //}
 
-    /*
+
     // move servo for certain amount of (milliseconds) with (power)
     public void moveServo(long ms, double power) throws InterruptedException {
         setPowerServo(power);
@@ -494,6 +494,6 @@ public class Main extends LinearOpMode {
         setPowerServo(0);
     }
 
-     */
+
 }
 
