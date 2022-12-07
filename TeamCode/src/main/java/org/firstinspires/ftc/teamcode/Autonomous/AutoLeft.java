@@ -144,7 +144,7 @@ public class AutoLeft extends Main {
         //
         encoderForward(60.96, .4);
         //
-        //turnHeading(180, 0.4);
+        turnHeading(180, 0.4);
         //
         encoderForward(121.92, 0.4);
 
