@@ -111,46 +111,44 @@ public class Main extends LinearOpMode {
                 continousMode = false;
             }
 
-            telemetry.addLine(String.valueOf(continousMode));
+            // do things depending on states
+            position = LinearSlide.getCurrentPosition();
+            telemetry.addLine(String.valueOf(position));
             telemetry.update();
 
-            // do things depending on states
-
             if (continousMode) {
-                //telemetry.addLine("This telemetry is crucial for the structural integrity of this code.");
-                //telemetry.update();
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                position = LinearSlide.getCurrentPosition();
                 LinearSlide.setPower(-gamepad2.left_stick_y / 2);
             } else {
-                //telemetry.addLine("non cont. mode");
-                //telemetry.update();
+
+
                 //linear slides
                 // height 1 (low junction)
                 if (gamepad2.a) {
-                    setSlideMMAbsolute(350, .6);
+                    setSlideMMAbsolute(350, .05);
                 }
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    setSlideMMAbsolute(595, .6);
+                    setSlideMMAbsolute(595, .05);
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
                 if (gamepad2.y) {
-                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, .6);
+                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, .05);
                 }
 
                 // down from any position
                 if (gamepad2.x) {
-                    setSlideBottomAbsolute(.6);
+                    //setSlideBottomAbsolute(.05);
+                    setSlideMMAbsolute(50, .05);
                 }
 
-
                 if (gamepad1.a) {
-                    turnHeading(90, .5f);
-                    sleep(10000);
-                    turnHeading(0, .5f);
+                    turnHeading(180, .4f);
+                }
+                if (gamepad1.y) {
+                    turnHeading(0, .4f);
                 }
             }
         }

@@ -116,7 +116,7 @@ public class AutoLeft extends Main {
         encoderStrafe(91.44 + 1.5, .2);
 
         // change to go to max junction later
-        setSlideMaxAbsolute(.8);
+        setSlideMaxAbsolute(.7);
 
         // in case we need to align forward
         // encoderForward(2.0, 0.2);
