@@ -109,28 +109,28 @@ public class AutoRight extends Main {
         // DO THINGS -- BELOW
 
         // 30" forward -> 76.2cm - 6cm (too much)
-        encoderForward(76.2-4, .3);
+        encoderForward(76.2-6, .3);
 
         // 36" left -> 91.44 cm
         encoderStrafe(-91.44 - 3, .2);
 
         // change to go to max junction later
-        //setSlideMaxAbsolute(.6);
+        setSlideMaxAbsolute(.6);
 
         // in case we need to align forward
         // encoderForward(2.0, 0.2);
 
         // move forward to align with the pole
-        encoderForward(4 + 2, .2);
+        encoderForward(3, .2);
 
         // move servo to outtake
-        //moveServo(2000, .5);
+        moveServo(3000, 1);
 
         // move backwards to be at the center
-        encoderForward(-4, .2);
+        encoderForward(-3, .2);
 
         // move backward just in case (not to bump into junction)
-        encoderForward(-2 - 2, 0.2);
+        encoderForward(-5, .2);
 
 
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
@@ -138,7 +138,7 @@ public class AutoRight extends Main {
 
         // reset the linear slides to the position
         // wait for it to go slightly down due to gravity (so that it's smoother when it pulls down with power)
-        //setSlideBottomAbsolute(.75);
+        setSlideBottomAbsolute(.5);
 
     }
 

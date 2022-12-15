@@ -94,11 +94,12 @@ public class Main extends LinearOpMode {
             if (gamepad2.left_trigger > .6f) {
                 setPowerServo(1);
             }
-            if (gamepad2.right_trigger > .6f) {
+            else if (gamepad2.right_trigger > .6f) {
                 setPowerServo(-1);
             }
-            // default to not having servo move (only move when triggered)
-            setPowerServo(0);
+            else {// default to not having servo move (only move when triggered)
+                setPowerServo(0);
+            }
 
             // state variables (switching between them)
             // NO LOCKING
@@ -125,23 +126,23 @@ public class Main extends LinearOpMode {
                 //linear slides
                 // height 1 (low junction)
                 if (gamepad2.a) {
-                    setSlideMMAbsolute(350, .05);
+                    setSlideMMAbsolute(350, .65);
                 }
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    setSlideMMAbsolute(595, .05);
+                    setSlideMMAbsolute(595, .65);
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
                 if (gamepad2.y) {
-                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, .05);
+                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, .65);
                 }
 
                 // down from any position
                 if (gamepad2.x) {
-                    //setSlideBottomAbsolute(.05);
-                    setSlideMMAbsolute(50, .05);
+                    setSlideBottomAbsolute(.5);
+                    //SetSlideMMAbsolute(50, .5);
                 }
 
                 if (gamepad1.a) {
@@ -189,7 +190,7 @@ public class Main extends LinearOpMode {
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // keep it reverse if you want positive ticks to move linear slide up
-        LinearSlide.setDirection(DcMotor.Direction.FORWARD);
+        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
 
         //when you're setting it up (in opMode)
         LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -224,8 +225,6 @@ public class Main extends LinearOpMode {
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
     public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
         // move BY difference between the positions the linear slide is at
-        int currentPosition = LinearSlide.getCurrentPosition();
-        int positionDifference = ticksPosition - currentPosition;
 
         // move by that amount of ticks
         LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -243,8 +242,10 @@ public class Main extends LinearOpMode {
                 } else {
                     setPowerMecanumGamepad(.5);
                 }
-                if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
-                if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
+                //servo intake, servo outtake
+                if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
+                else if (gamepad2.right_trigger > .6f) {setPowerServo(-1);}
+                else {setPowerServo(0);}
 
             }
         }
