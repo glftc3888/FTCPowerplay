@@ -32,12 +32,12 @@ public class Main extends LinearOpMode {
     private static CRServo leftServo = null;
     private static CRServo rightServo = null;
 
-    //private DcMotor LinearSlide = null;
+    private DcMotor LinearSlide = null;
 
     boolean teleop = false;
 
     // will use later... This is for angle (see code from last year)
-    BNO055IMU IMU;
+    BNO055IMU Gyro;
 
     // roughly 537.7, but ((((1+(46/17))) * (1+(46/11))) * 28) to be exact (on the site)
     // Link for motor:
@@ -58,7 +58,6 @@ public class Main extends LinearOpMode {
 
     boolean continousMode = false;
     int position = 0;
-    //private BNO055IMU Gyro;
 
 
     @Override
@@ -92,62 +91,68 @@ public class Main extends LinearOpMode {
             // controlling linear slides and intake -- gamepad 2
 
             //servo intake, servo outtake
-            if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
-            if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
-            // default to not having servo move (only move when triggered)
-            setPowerServo(0);
+            if (gamepad2.left_trigger > .6f) {
+                setPowerServo(1);
+            }
+            else if (gamepad2.right_trigger > .6f) {
+                setPowerServo(-1);
+            }
+            else {// default to not having servo move (only move when triggered)
+                setPowerServo(0);
+            }
 
             // state variables (switching between them)
             // NO LOCKING
             // if (gamepad2.left_stick_button) {lock = !lock;}
 
-            if (gamepad2.right_bumper) { continousMode = true; }
-            if (gamepad2.left_bumper) { continousMode = false; }
-
-            telemetry.addLine(String.valueOf(continousMode));
-            telemetry.update();
+            if (gamepad2.right_bumper) {
+                continousMode = true;
+            }
+            if (gamepad2.left_bumper) {
+                continousMode = false;
+            }
 
             // do things depending on states
-            /*
+            position = LinearSlide.getCurrentPosition();
+            telemetry.addLine(String.valueOf(position));
+            telemetry.update();
+
             if (continousMode) {
-                //telemetry.addLine("This telemetry is crucial for the structural integrity of this code.");
-                //telemetry.update();
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                position = LinearSlide.getCurrentPosition();
-                LinearSlide.setPower(-gamepad2.left_stick_y/2);
-            }
-            else {
-                //telemetry.addLine("non cont. mode");
-                //telemetry.update();
+                LinearSlide.setPower(-gamepad2.left_stick_y / 2);
+            } else {
+
+
                 //linear slides
                 // height 1 (low junction)
                 if (gamepad2.a) {
-                    setSlideMMAbsolute(350, .6);
+                    setSlideMMAbsolute(350, .65);
                 }
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    setSlideMMAbsolute(595, .6);
+                    setSlideMMAbsolute(595, .65);
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
                 if (gamepad2.y) {
-                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, .6);
+                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, .65);
                 }
 
                 // down from any position
                 if (gamepad2.x) {
-                    setSlideBottomAbsolute(.6);
+                    setSlideBottomAbsolute(.5);
+                    //SetSlideMMAbsolute(50, .5);
                 }
-
-             */
 
                 if (gamepad1.a) {
-                    turnHeading(90, .5f);
-                    sleep(10000);
-                    turnHeading(0, .5f);
+                    turnHeading(180, .4f);
+                }
+                if (gamepad1.y) {
+                    turnHeading(0, .4f);
                 }
             }
+        }
     }
 
     public void initRobot(){
@@ -157,7 +162,7 @@ public class Main extends LinearOpMode {
         frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
         backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
 
-        //LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+        LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
 
         leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
         rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
@@ -165,10 +170,10 @@ public class Main extends LinearOpMode {
 
         imu = hardwareMap.get(BNO055IMU.class, "Gyro");
 
-        Orientation orient = new Orientation();
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters); // init the gyro
+
         telemetry.addData("Calibrating imu: ", imu.getCalibrationStatus().toString());
         telemetry.addData("imu ready?: ", imu.isGyroCalibrated());
 
@@ -177,7 +182,7 @@ public class Main extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -185,22 +190,19 @@ public class Main extends LinearOpMode {
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // keep it reverse if you want positive ticks to move linear slide up
-        //LinearSlide.setDirection(DcMotor.Direction.REVERSE);
+        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
 
         //when you're setting it up (in opMode)
-        //LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontRightMotor.setPower(0);
 
-        //LinearSlide.setPower(0);
+        LinearSlide.setPower(0);
 
-        lastAngles = new Orientation();
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        globalAngle = 0;
     }
 
     public void setPowerMecanumGamepad(double constant){
@@ -220,16 +222,14 @@ public class Main extends LinearOpMode {
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
     public void setSlideTicksAbsolute(int ticksPosition, double power) throws InterruptedException{
         // move BY difference between the positions the linear slide is at
-        // int currentPosition = LinearSlide.getCurrentPosition();
-        //int positionDifference = ticksPosition - currentPosition;
 
         // move by that amount of ticks
-        //LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //LinearSlide.setTargetPosition(ticksPosition);
-        //LinearSlide.setPower(power);
-        //LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LinearSlide.setTargetPosition(ticksPosition);
+        LinearSlide.setPower(power);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        /*
+
         while(LinearSlide.isBusy()) {
             if (teleop) {
                 if (gamepad1.left_trigger > .6f) {
@@ -239,13 +239,15 @@ public class Main extends LinearOpMode {
                 } else {
                     setPowerMecanumGamepad(.5);
                 }
-                if(gamepad2.left_trigger > .6f) { setPowerServo(1);}
-                if(gamepad2.right_trigger > .6f) { setPowerServo(-1);}
+                //servo intake, servo outtake
+                if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
+                else if (gamepad2.right_trigger > .6f) {setPowerServo(-1);}
+                else {setPowerServo(0);}
 
             }
         }
 
-         */
+
 
         // Uncomment below if you want linear slides to just stop powering once you get to position
         //LinearSlide.setPower(0);
@@ -260,7 +262,7 @@ public class Main extends LinearOpMode {
         int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * TPR);
         setSlideTicksAbsolute(ticksFromMM, power);
     }
-    /*
+
     public void setSlideBottomAbsolute(double power) throws InterruptedException {
         setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE, power);
         LinearSlide.setPower(0);
@@ -271,7 +273,7 @@ public class Main extends LinearOpMode {
         setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION, power);
     }
 
-     */
+
 
     public boolean isBusy() {
         return (frontLeftMotor.isBusy() || backLeftMotor.isBusy() || backRightMotor.isBusy() || frontRightMotor.isBusy());
@@ -363,7 +365,7 @@ public class Main extends LinearOpMode {
     }
 
     public double getAngle(){
-        Orientation angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES);
         return angles.firstAngle;
     }
 
@@ -374,9 +376,11 @@ public class Main extends LinearOpMode {
 
         double err = (angle-this.getAngle());
 
-        double prop = err/180;
+        double prop = err/360;
 
-        while(opModeIsActive() && Math.abs(err)>tol){
+        boolean mode = (opModeIsActive()) || !teleop;
+
+        while(mode && Math.abs(err)>tol){
             power = (m_P*prop);
 
             backRightMotor.setPower(-power);
@@ -392,80 +396,6 @@ public class Main extends LinearOpMode {
 
     }
 
-    /*
-    public double getAngle(double angle){
-        if(angle<0){
-            return Math.abs(angle);
-        }
-        else if(angle>360){
-            return Math.abs(angle) - 360;
-        }
-        else{
-            return 360 - angle;
-        }
-    }
-    public boolean rightorleft(int angle){
-        if(Math.abs(Gyro.getAngularOrientation().firstAngle - angle)>180)
-            return true;
-        else
-            return false;
-    }
-
-    public void turngyro(int angle) {
-        //double heading = imu.getAngularOrientation().firstAngle;
-        while (Math.abs(getAngle(Gyro.getAngularOrientation().firstAngle) - angle) != 0) {
-            if (angle == 0) {
-                telemetry.addData("Current angle: ", Gyro.getAngularOrientation().firstAngle);
-            } else if (rightorleft(angle)) {
-                frontLeftMotor.setPower(-0.35);
-                frontRightMotor.setPower(0.35);
-                backLeftMotor.setPower(-0.35);
-                backRightMotor.setPower(0.35);
-            } else {
-                frontLeftMotor.setPower(0);
-                frontRightMotor.setPower(0);
-                backLeftMotor.setPower(0);
-                backRightMotor.setPower(0);
-            }
-
-        }
-    }
-
-     */
-
-
-
-
-    /*
-    public void encoderTurn(double angle) {
-
-        double percent = angle / 360;
-
-        double roboRadius = Math.sqrt(Math.pow(8.05,2) + Math.pow(7.0, 2));
-
-        double circumference = roboRadius * 2 * Math.PI;
-
-        double distance = percent * circumference;
-
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-     */
     public void readEncoder(){
         telemetry.addData("topLeft Encoder Ticks: ", frontLeftMotor.getCurrentPosition());
         telemetry.addData("topRight Encoder Ticks: ", frontRightMotor.getCurrentPosition());
@@ -496,4 +426,3 @@ public class Main extends LinearOpMode {
 
 
 }
-

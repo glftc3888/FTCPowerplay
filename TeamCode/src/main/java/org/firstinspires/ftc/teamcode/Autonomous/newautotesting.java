@@ -12,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
-@Autonomous(name = "AutoRight", group = "Autonomous")
-public class AutoRight extends Main {
+@Autonomous(name = "newautotesting", group = "Autonomous")
+public class newautotesting extends Main {
 
     // Declaration of global variables
     private ElapsedTime runtime = new ElapsedTime();
@@ -74,7 +74,7 @@ public class AutoRight extends Main {
         runtime.reset();
 
         // sleep for a bit in order to wait for the camera to sense the color
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         // get parking position enum
         SleeveDetection.ParkingPosition parkingPosition;
@@ -108,37 +108,78 @@ public class AutoRight extends Main {
 
         // DO THINGS -- BELOW
 
-        // 30" forward -> 76.2cm - 6cm (too much)
-        encoderForward(76.2-6, .3);
+        // forward by 52" -> 132 cm
+        encoderForward(132.08, .5);
 
-        // 36" left -> 91.44 cm
-        encoderStrafe(-91.44 - 3, .2);
+        // left strafe by 12" -> 30.48 cm
+        encoderStrafe(-30.48, .5);
 
-        // change to go to max junction later
         setSlideMaxAbsolute(.6);
 
-        // in case we need to align forward
-        // encoderForward(2.0, 0.2);
+        // forward to align -> 3"
+        encoderForward(7.62, .3);
 
-        // move forward to align with the pole
-        encoderForward(3, .2);
-
-        // move servo to outtake
+        // outtake
         moveServo(3000, 1);
 
-        // move backwards to be at the center
-        encoderForward(-3, .2);
+        // go back to dis-align -> 3"
+        encoderForward(-7.62, .3);
 
-        // move backward just in case (not to bump into junction)
-        encoderForward(-5, .2);
+        setSlideBottomAbsolute(.75);
+
+        // right strafe by 12" -> 30.48 cm
+        encoderStrafe(30.48, .5);
+
+        // turn to the stack
+        turnHeading(90, .4f);
 
 
+
+        /*
+        // moving forward to middle
+        encoderForward(124, .4);
+
+        telemetry.addLine("bruh");
+        telemetry.update();
+
+
+        // strafe infront of junction
+        encoderStrafe(-31, .56);
+
+        telemetry.addLine("yey it got pass");
+        telemetry.update();
+
+        encoderForward(6, .5);
+
+        // raise slide to high
+        setSlideMaxAbsolute(.6);
+
+        // outtake
+        moveServo(3000, 1);
+
+        // bring slide back down
+        setSlideMMAbsolute(123, .5);
+
+        // strafe to  near stacks
+        encoderStrafe(100, .5);
+
+        // turn to face stacks
+        turnHeading(90, .4f);
+
+        //move forward to attach to stacks
+        encoderForward(15, .5);
+
+
+        // EDIT FROM RIGHT: strafe is going left to go back
+        // EDIT FROM RIGHT: now we have to go
         // 12" + 24" * ENUM -> 30.48cm + 60.96cm * ENUM
-        encoderStrafe(30.48 + 60.96 * pposition + 3, 0.4);
+        //encoderForward(-30.48 - 60.96 * (2-pposition) - 1.5, 0.4);
 
         // reset the linear slides to the position
         // wait for it to go slightly down due to gravity (so that it's smoother when it pulls down with power)
-        setSlideBottomAbsolute(.5);
+        //setSlideBottomAbsolute(.75);
+
+*/
 
     }
 
