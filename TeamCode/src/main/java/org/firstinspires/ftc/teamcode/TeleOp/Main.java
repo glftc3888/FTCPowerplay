@@ -146,10 +146,10 @@ public class Main extends LinearOpMode {
                 }
 
                 if (gamepad1.a) {
-                    turnHeading(180, .4f);
+                    turnPID(90);
                 }
                 if (gamepad1.y) {
-                    turnHeading(0, .4f);
+                    turnPID(0);
                 }
             }
         }
@@ -378,9 +378,7 @@ public class Main extends LinearOpMode {
 
         double prop = err/360;
 
-        boolean mode = (opModeIsActive()) || !teleop;
-
-        while(mode && Math.abs(err)>tol){
+        while(Math.abs(err)>tol){
             power = (m_P*prop);
 
             backRightMotor.setPower(-power);
@@ -415,7 +413,19 @@ public class Main extends LinearOpMode {
     //public void setPowerLinearSlide(double power){
     //    LinearSlide.setPower(power);
     //}
+    public double getAbsoluteAngle() {
+        return imu.getAngularOrientation(
+                AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES
+        ).firstAngle;
+    }
 
+
+    public void setMotorPower(double fLM, double bLM, double fRM, double bRM) {
+        frontLeftMotor.setPower(fLM);
+        backLeftMotor.setPower(bLM);
+        frontRightMotor.setPower(fRM);
+        backRightMotor.setPower(bRM);
+    }
 
     // move servo for certain amount of (milliseconds) with (power)
     public void moveServo(long ms, double power) throws InterruptedException {
@@ -423,6 +433,25 @@ public class Main extends LinearOpMode {
         Thread.sleep(ms);
         setPowerServo(0);
     }
+    public void turnPID(double degrees) {
+        turnToPID(degrees + getAbsoluteAngle());
+    }
 
+    void turnToPID(double targetAngle) {
+        TurnPIDController pid = new TurnPIDController(targetAngle, 0.01, 0, 0.003);
+        telemetry.setMsTransmissionInterval(50);
+        // Checking lastSlope to make sure that it's not oscillating when it quits
+        while (Math.abs(targetAngle - getAbsoluteAngle()) > 0.5 || pid.getLastSlope() > 0.75) {
+            double motorPower = pid.update(getAbsoluteAngle());
+            setMotorPower(-motorPower, motorPower, -motorPower, motorPower);
 
+            telemetry.addData("Current Angle", getAbsoluteAngle());
+            telemetry.addData("Target Angle", targetAngle);
+            telemetry.addData("Slope", pid.getLastSlope());
+            telemetry.addData("Power", motorPower);
+            telemetry.update();
+        }
+        setMotorPower(0, 0,0,0);
+     }
 }
+
