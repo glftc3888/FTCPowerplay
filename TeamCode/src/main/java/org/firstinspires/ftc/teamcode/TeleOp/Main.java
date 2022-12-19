@@ -434,16 +434,18 @@ public class Main extends LinearOpMode {
         setPowerServo(0);
     }
     public void turnPID(double degrees) {
-        turnToPID(degrees + getAbsoluteAngle());
+        turnToPID(degrees);
     }
 
     void turnToPID(double targetAngle) {
-        TurnPIDController pid = new TurnPIDController(targetAngle, 0.01, 0, 0.003);
+        TurnPIDController pid = new TurnPIDController(targetAngle, 0.01, 0.000, 0.006);
         telemetry.setMsTransmissionInterval(50);
         // Checking lastSlope to make sure that it's not oscillating when it quits
-        while (Math.abs(targetAngle - getAbsoluteAngle()) > 0.5 || pid.getLastSlope() > 0.75) {
+        boolean mode = (teleop)? opModeIsActive() : true;
+        while ((Math.abs(targetAngle - getAbsoluteAngle()) > 0.5 || pid.getLastSlope() > 0.75) && (mode)) {
+            mode = (teleop)? opModeIsActive() : true;
             double motorPower = pid.update(getAbsoluteAngle());
-            setMotorPower(-motorPower, motorPower, -motorPower, motorPower);
+            setMotorPower(motorPower, motorPower, -motorPower, -motorPower);
 
             telemetry.addData("Current Angle", getAbsoluteAngle());
             telemetry.addData("Target Angle", targetAngle);

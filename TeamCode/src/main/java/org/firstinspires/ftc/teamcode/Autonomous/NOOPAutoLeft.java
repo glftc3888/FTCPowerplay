@@ -22,7 +22,7 @@ public class NOOPAutoLeft extends Main {
     // Link for motor:
     // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     // Ticks Per Rotation (how many ticks in one full motor rotation)
-    private static final double TPR = (1+(46/17)) * (1+(46/11)) * 28;// ticks per revolution
+    private static final double TPR = (1+((double)46/17)) * (1+((double)46/11)) * 28;// ticks per revolution
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
