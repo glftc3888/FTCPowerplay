@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 // Import modules
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,18 +19,7 @@ public class newautotesting extends Main {
     // Declaration of global variables
     private ElapsedTime runtime = new ElapsedTime();
 
-    // roughly 537.7, but ((((1+(46/17))) * (1+(46/11))) * 28) to be exact (on the site)
-    // Link for motor:
-    // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
-    // Ticks Per Rotation (how many ticks in one full motor rotation)
-    private static final double TPR = (1+(46/17)) * (1+(46/11)) * 28;// ticks per revolution
-    // circumference of the pulley circle pulling the string in linear slides
-    private static final double CIRCUMFERENCE = 112; // in mm
-    // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private double MAX_LINEAR_SLIDE_EXTENSION = 976; // in mm
-    private static final double RADIUS = 4.8; // in cm
-    private static final double PI=3.1415926535;
-    private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
+    BNO055IMU imu;
 
 
     // camera setup
@@ -47,6 +37,11 @@ public class newautotesting extends Main {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
         camera.setPipeline(sleeveDetection);
+        imu = hardwareMap.get(BNO055IMU.class, "Gyro");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu.initialize(parameters); // init the gyro
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -101,7 +96,7 @@ public class newautotesting extends Main {
 
         telemetry.addLine(String.valueOf(pposition));
         telemetry.update();
-
+/*
         // LEFT, CENTER, RIGHT --> 0, 1, 2   = 'parkingPosition' object
 
         // AT THE END: 12 inches + 24*ENUM(0 1 OR 2)
@@ -129,9 +124,9 @@ public class newautotesting extends Main {
 
         // right strafe by 12" -> 30.48 cm
         encoderStrafe(30.48, .5);
-
+*/
         // turn to the stack
-        turnHeading(90, .4f);
+        turnPID(90);
 
 
 

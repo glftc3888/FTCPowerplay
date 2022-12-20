@@ -441,9 +441,11 @@ public class Main extends LinearOpMode {
         TurnPIDController pid = new TurnPIDController(targetAngle, 0.01, 0.000, 0.006);
         telemetry.setMsTransmissionInterval(50);
         // Checking lastSlope to make sure that it's not oscillating when it quits
-        boolean mode = (teleop)? opModeIsActive() : true;
-        while ((Math.abs(targetAngle - getAbsoluteAngle()) > 0.5 || pid.getLastSlope() > 0.75) && (mode)) {
-            mode = (teleop)? opModeIsActive() : true;
+        //boolean mode = (teleop)? opModeIsActive() : true;
+        //boolean mode = opModeIsActive();
+        while ((Math.abs(targetAngle - getAbsoluteAngle()) > 0.5 || pid.getLastSlope() > 0.75)) {
+            //mode = (teleop)? opModeIsActive() : true;
+            //mode = opModeIsActive();
             double motorPower = pid.update(getAbsoluteAngle());
             setMotorPower(motorPower, motorPower, -motorPower, -motorPower);
 
