@@ -96,7 +96,7 @@ public class newautotesting extends Main {
 
         telemetry.addLine(String.valueOf(pposition));
         telemetry.update();
-/*
+
         // LEFT, CENTER, RIGHT --> 0, 1, 2   = 'parkingPosition' object
 
         // AT THE END: 12 inches + 24*ENUM(0 1 OR 2)
@@ -124,7 +124,7 @@ public class newautotesting extends Main {
 
         // right strafe by 12" -> 30.48 cm
         encoderStrafe(30.48, .5);
-*/
+
         // turn to the stack
         turnPID(90);
 
