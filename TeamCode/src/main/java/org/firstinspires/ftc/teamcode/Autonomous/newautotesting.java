@@ -104,10 +104,10 @@ public class newautotesting extends Main {
         // DO THINGS -- BELOW
 
         // forward by 52" -> 132 cm
-        encoderForward(132.08, .5);
+        encoderForward(132.08, .9);
 
         // left strafe by 12" -> 30.48 cm
-        encoderStrafe(-30.48, .5);
+        encoderStrafe(-30.48, .9);
 
         setSlideMaxAbsolute(.6);
 
@@ -115,7 +115,7 @@ public class newautotesting extends Main {
         encoderForward(7.62, .3);
 
         // outtake
-        moveServo(3000, 1);
+        moveServo(1000, 1);
 
         // go back to dis-align -> 3"
         encoderForward(-7.62, .3);
@@ -123,11 +123,38 @@ public class newautotesting extends Main {
         setSlideBottomAbsolute(.75);
 
         // right strafe by 12" -> 30.48 cm
-        encoderStrafe(30.48, .5);
+        encoderStrafe(30.48, .9);
 
         // turn to the stack
+        turnPID(-90);
+
+        // go forward 48"
+        encoderForward(121.92, .9);
+
+        // go up grab 5th cone - up 6"
+        setSlideMMAbsolute(152,.6);
+
+        // back 48"
+        encoderForward(121.92, -.9);
+
         turnPID(90);
 
+        // strafe right 12"
+        encoderStrafe(30.48, .9);
+
+        // raise slide to score
+        setSlideMaxAbsolute(.6);
+
+        // forward to align -> 3"
+        encoderForward(7.62, .3);
+
+        // outtake
+        moveServo(1000, 1);
+
+        // go back to dis-align -> 3"
+        encoderForward(-7.62, .3);
+
+        setSlideBottomAbsolute(.75);
 
 
         /*
