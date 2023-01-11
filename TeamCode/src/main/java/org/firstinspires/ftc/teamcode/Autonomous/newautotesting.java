@@ -105,10 +105,10 @@ public class newautotesting extends Main {
 
 
         // forward by 52" -> 132 cm
-        encoderForward(132.08, .5);
+        encoderForward(132.08, .9);
 
         // left strafe by 12" -> 30.48 cm
-        encoderStrafe(-30.48, .5);
+        encoderStrafe(-30.48-3, .9);
 
         setSlideMaxAbsolute(.6);
 
@@ -124,13 +124,24 @@ public class newautotesting extends Main {
         setSlideBottomAbsolute(.75);
 
         // right strafe by 12" -> 30.48 cm
-        encoderStrafe(30.48, .5);
+        encoderStrafe(30.48+3, .5);
 
         // turn to the stack
         turnPID(-90);
 
         //go up a little bit
-        setSlideMMAbsolute(152 + 76, .3);
+        setSlideMMAbsolute(152, .3);
+
+        // go forward towards stack
+        encoderForward(50.4 + 10, .5);
+
+        encoderStrafe(-5, .3);
+
+        // intake cone
+        moveServo(1000,-1);
+
+        setSlideMMAbsolute(5, 0.3);
+
 
 
         /*
