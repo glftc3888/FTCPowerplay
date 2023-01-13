@@ -6,26 +6,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TurnPIDController {
     private double kP, kI, kD;
     private ElapsedTime timer = new ElapsedTime();
-    private double targetAngle;
+    private double targetPos;
     private double lastError = 0;
     private double accumulatedError = 0;
     private double lastTime = -1;
     private double lastSlope = 0;
+    private boolean isAngle = true;
 
-    public TurnPIDController(double target, double p, double i, double d) {
+    public TurnPIDController(double target, double p, double i, double d, boolean isAngle) {
         kP = p;
         kI = i;
         kD = d;
-        targetAngle = target;
+        targetPos = target;
+        this.isAngle = isAngle;
     }
 
-    public double update(double currentAngle) {
-        double error = targetAngle - currentAngle;
-        error %= 360;
-        error += 360;
-        error %= 360;
-        if (error > 180) {
-            error -= 360;
+    public double update(double currentPos) {
+        double error = targetPos - currentPos;
+
+        if (isAngle) {
+            error %= 360;
+            error += 360;
+            error %= 360;
+            if (error > 180) {
+                error -= 360;
+            }
         }
 
         // I

@@ -69,7 +69,7 @@ public class newautotesting extends Main {
         runtime.reset();
 
         // sleep for a bit in order to wait for the camera to sense the color
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
 
         // get parking position enum
         SleeveDetection.ParkingPosition parkingPosition;
@@ -110,7 +110,7 @@ public class newautotesting extends Main {
         // left strafe by 12" -> 30.48 cm
         encoderStrafe(-30.48-3, .9);
 
-        setSlideMaxAbsolute(.6);
+        setSlideMaxAbsolute();
 
         // forward to align -> 3"
         encoderForward(7.62, .3);
@@ -121,7 +121,7 @@ public class newautotesting extends Main {
         // go back to dis-align -> 3"
         encoderForward(-7.62, .3);
 
-        setSlideBottomAbsolute(.75);
+        setSlideBottomAbsolute();
 
         // right strafe by 12" -> 30.48 cm
         encoderStrafe(30.48+3, .5);
@@ -130,17 +130,24 @@ public class newautotesting extends Main {
         turnPID(-90);
 
         //go up a little bit
-        setSlideMMAbsolute(152, .3);
-
-        // go forward towards stack
-        encoderForward(50.4 + 10, .5);
+        setSlideMMAbsolute(152 - 20);
 
         encoderStrafe(-5, .3);
+
+        // go forward towards stack
+        encoderForward(50.4 + 10, .7);
 
         // intake cone
         moveServo(1000,-1);
 
-        setSlideMMAbsolute(5, 0.3);
+        //up the slide so we don't knock down stack
+        setSlideMMAbsolute(152 + (int)(7*2.54));
+
+        //going back
+        encoderForward(-20 * 2.54, .5);
+
+        //turning to low junc
+        turnPID(-90);
 
 
 

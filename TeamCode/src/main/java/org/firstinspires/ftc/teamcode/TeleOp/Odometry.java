@@ -1,21 +1,11 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
-import org.firstinspires.ftc.teamcode.TeleOp.Main;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 @TeleOp(name = "Odometry", group = "TeleOp")
 
 
-public class Odometry extends Main{
+public class Odometry extends Main {
     // Motors
     private DcMotor frontLeftMotor;
     private DcMotor frontRightMotor;
@@ -23,8 +13,10 @@ public class Odometry extends Main{
     private DcMotor backRightMotor;
     // Encoder Ticks per revolution
     private final double TICKS_PER_REV = 537.7;
-    // Wheel Circumference
-    private final double WHEEL_CIRCUMFERENCE = 27.75;
+
+    private static final double RADIUS = 4.8; // in cm
+    private static final double PI=3.1415926535;
+    private static final double WHEEL_CIRCUMFERENCE = 2*PI*RADIUS;
     // Distance per tick
     private final double DISTANCE_PER_TICK = WHEEL_CIRCUMFERENCE / TICKS_PER_REV;
     // Track the total distance for each wheel
@@ -48,7 +40,7 @@ public class Odometry extends Main{
         this.frontRightMotor = frontRightMotor;
         this.backLeftMotor = backLeftMotor;
         this.backRightMotor = backRightMotor;
-        pid = new TurnPIDController(0, 0.01, 0.000, 0.006);
+        pid = new TurnPIDController(0, 0.01, 0.000, 0.006, false);
     }
 
     public void update() {
@@ -60,10 +52,10 @@ public class Odometry extends Main{
             int backRightTicks = backRightMotor.getCurrentPosition() - backRightMotor.getTargetPosition();
 
             // Update the total distance for each wheel
-            frontLeftDistance += frontLeftTicks * DISTANCE_PER_TICK;
-            frontRightDistance += frontRightTicks * DISTANCE_PER_TICK;
-            backLeftDistance += backLeftTicks * DISTANCE_PER_TICK;
-            backRightDistance += backRightTicks * DISTANCE_PER_TICK;
+            frontLeftDistance = frontLeftTicks * DISTANCE_PER_TICK;
+            frontRightDistance = frontRightTicks * DISTANCE_PER_TICK;
+            backLeftDistance = backLeftTicks * DISTANCE_PER_TICK;
+            backRightDistance = backRightTicks * DISTANCE_PER_TICK;
 
             // Calculate the average distance and delta heading
             double avgDistance = (frontLeftDistance + frontRightDistance + backLeftDistance + backRightDistance) / 4.0;
@@ -87,6 +79,9 @@ public class Odometry extends Main{
             }
         }
     }
+
+    public double getX(){return x;}
+    public double getY(){return y;}
 
 }
 

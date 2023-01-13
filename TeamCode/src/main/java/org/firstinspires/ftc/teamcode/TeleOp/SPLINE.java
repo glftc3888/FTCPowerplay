@@ -13,6 +13,6 @@ import com.acmerobotics.roadrunner.path.TrajectoryBuilder;
 */
 @TeleOp(name = "SPLINE", group = "TeleOp")
 
-public class SPLINE {
+public class SPLINE extends Main{
 
 }
