@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-// code from previous year - encoders, camera, motors
+// code from previous year - encoders, camera, motors (we better this year.)
 // https://github.com/greasedlightning/FtcRobotController
 
 @TeleOp(name = "TeleOpMain", group = "TeleOp")
@@ -126,7 +126,6 @@ public class Main extends LinearOpMode {
                 LinearSlide.setPower(-gamepad2.left_stick_y / 2);
             } else {
 
-
                 //linear slides
                 // height 1 (low junction)
 
@@ -149,6 +148,7 @@ public class Main extends LinearOpMode {
                     setSlideBottomAbsolute();
                 }
 
+
                 if (gamepad1.a) {
                     turnPID(90);
                 }
@@ -162,6 +162,7 @@ public class Main extends LinearOpMode {
             telemetry.update();
         }
     }
+
 
     public void initRobot(){
         // Setup hardware
@@ -224,26 +225,19 @@ public class Main extends LinearOpMode {
         backRightMotor.setPower((leftY - leftX + rightX)* constant);
         backLeftMotor.setPower((leftY + leftX - rightX)* constant);
     }
-    /*
-            TurnPIDController slidePIDController = new TurnPIDController(ticks, 0.0002, 0.00001, 0.00001, false);
-        telemetry.setMsTransmissionInterval(50);
 
-        LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        int currentTicks = LinearSlide.getCurrentPosition();
-        while((Math.abs(currentTicks - ticks) > 5) && opModeIsActive()){
-            currentTicks = LinearSlide.getCurrentPosition();
-            double slidePower = slidePIDController.update(currentTicks);
-            LinearSlide.setPower(slidePower);
-        }
-        LinearSlide.setPower(0);
-     */
 
 
     // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
     public void setSlideTicksAbsolute(int ticks) throws InterruptedException{
-        TurnPIDController slidePIDController = new TurnPIDController(ticks, 0.0002, 0.00001, 0.001, false);
+        boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
+        PIDController slidePIDController;
+        if (down) {
+            slidePIDController = new PIDController(ticks, 0.0015, 0.0000001, 0.4, false);
+        }else{
+            slidePIDController = new PIDController(ticks, 0.0025, 0.0000001, 0.2, false);
+        }
         telemetry.setMsTransmissionInterval(50);
 
         LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -251,7 +245,10 @@ public class Main extends LinearOpMode {
         double slidePower = 0;
         int currentTicks = LinearSlide.getCurrentPosition();
 
-        while((Math.abs(currentTicks - ticks) > 5) && opModeIsActive()){
+        while((Math.abs(currentTicks - ticks) > 10) && opModeIsActive()){
+            telemetry.addLine("Stuck in loopz");
+            telemetry.update();
+
             currentTicks = LinearSlide.getCurrentPosition();
             slidePower = slidePIDController.update(currentTicks);
             LinearSlide.setPower(slidePower);
@@ -274,8 +271,9 @@ public class Main extends LinearOpMode {
 
         LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LinearSlide.setTargetPosition(ticks);
-        LinearSlide.setPower(0.01);
+        LinearSlide.setPower(slidePower);
         LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 
     // set linear slide to certain tick position from MILLIMETER measurement upwards
@@ -467,7 +465,7 @@ public class Main extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        TurnPIDController pid = new TurnPIDController(targetAngle, 0.01, 0.000, 0.006, true);
+        PIDController pid = new PIDController(targetAngle, 0.01, 0.000, 0.006, true);
         telemetry.setMsTransmissionInterval(50);
         // Checking lastSlope to make sure that it's not oscillating when it quits
         //boolean mode = (teleop)? opModeIsActive() : true;

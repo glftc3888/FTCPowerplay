@@ -32,7 +32,7 @@ public class Odometry extends Main {
     private double targetAngle = 0;
     // Flag to indicate if the robot is currently turning
     private boolean isTurning = false;
-    private TurnPIDController pid;
+    private PIDController pid;
 
 
     public Odometry(DcMotor frontLeftMotor, DcMotor frontRightMotor, DcMotor backLeftMotor, DcMotor backRightMotor) {
@@ -40,7 +40,7 @@ public class Odometry extends Main {
         this.frontRightMotor = frontRightMotor;
         this.backLeftMotor = backLeftMotor;
         this.backRightMotor = backRightMotor;
-        pid = new TurnPIDController(0, 0.01, 0.000, 0.006, false);
+        pid = new PIDController(0, 0.01, 0.000, 0.006, false);
     }
 
     public void update() {

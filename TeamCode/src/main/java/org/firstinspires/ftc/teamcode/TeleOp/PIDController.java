@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 // Single use per object
-public class TurnPIDController {
+public class PIDController {
     private double kP, kI, kD;
     private ElapsedTime timer = new ElapsedTime();
     private double targetPos;
@@ -13,12 +13,16 @@ public class TurnPIDController {
     private double lastSlope = 0;
     private boolean isAngle = true;
 
-    public TurnPIDController(double target, double p, double i, double d, boolean isAngle) {
+    public PIDController(double target, double p, double i, double d, boolean isAngle) {
         kP = p;
         kI = i;
         kD = d;
         targetPos = target;
         this.isAngle = isAngle;
+    }
+
+    public void setTargetPosition(double target){
+        this.targetPos = target;
     }
 
     public double update(double currentPos) {
