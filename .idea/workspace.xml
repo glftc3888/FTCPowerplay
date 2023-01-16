@@ -7,125 +7,36 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a6377a7-9013-41e7-a16a-79109627aa06" name="Changes" comment="Added PID to linear slide.">
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/DriveConstants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/SampleMecanumDrive.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/SampleTankDrive.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/StandardTrackingWheelLocalizer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/DriveConstants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/SampleMecanumDrive.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/SampleTankDrive.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/StandardTrackingWheelLocalizer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/AutomaticFeedforwardTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/BackAndForth.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/DriveVelocityPIDTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/FollowerPIDTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/LocalizationTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/ManualFeedforwardTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/MaxAngularVeloTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/MaxVelocityTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/MotorDirectionDebugger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/SplineTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/StrafeTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/StraightTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TrackWidthTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TrackingWheelForwardOffsetTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TrackingWheelLateralDistanceTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TurnTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/AutomaticFeedforwardTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/BackAndForth.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/DriveVelocityPIDTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/FollowerPIDTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/LocalizationTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/ManualFeedforwardTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/MaxAngularVeloTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/MaxVelocityTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/MotorDirectionDebugger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/SplineTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/StrafeTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/StraightTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/TrackWidthTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/TrackingWheelForwardOffsetTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/TrackingWheelLateralDistanceTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/drive/opmode/TurnTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/SampleMecanumDrive.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/SampleTankDrive.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/StandardTrackingWheelLocalizer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutomaticFeedforwardTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/BackAndForth.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/DriveVelocityPIDTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/FollowerPIDTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/LocalizationTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/ManualFeedforwardTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/MaxAngularVeloTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/MaxVelocityTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/MotorDirectionDebugger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/SplineTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/StrafeTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/StraightTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackWidthTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackingWheelForwardOffsetTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackingWheelLateralDistanceTuner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TurnTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/acmerobotics road-runner-quickstart master TeamCode-src_main_java_org_firstinspires_ftc_teamcode.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/EmptySequenceException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/TrajectorySequence.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/TrajectorySequenceBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/TrajectorySequenceRunner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/sequencesegment/SequenceSegment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/sequencesegment/TrajectorySegment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/sequencesegment/TurnSegment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/trajectorysequence/sequencesegment/WaitSegment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/AssetsTrajectoryManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/AxesSigns.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/AxisDirection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/BNO055IMUUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/DashboardUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/Encoder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/LoggingUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/LynxModuleUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/util/RegressionUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/checksums/sha1-checksums.bin" afterDir="false" />
+    <list default="true" id="4a6377a7-9013-41e7-a16a-79109627aa06" name="Changes" comment="RoadRunner configuration. Half-way through tuning">
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/generated/source/buildConfig/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/generated/source/buildConfig/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/compile_library_classes_jar/debug/classes.jar" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/compile_library_classes_jar/debug/classes.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/compile_symbol_list/debug/R.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/compile_symbol_list/debug/R.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/javac/debug/classes/com/qualcomm/ftcrobotcontroller/BuildConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/javac/debug/classes/com/qualcomm/ftcrobotcontroller/BuildConfig.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/javac/debug/classes/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/javac/debug/classes/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/apk/debug/TeamCode-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/apk/debug/TeamCode-debug.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/11/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/11/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/8/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/8/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/debug-mergeJavaRes/merge-state" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/debug-mergeJavaRes/merge-state" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/TurnPIDController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/Main.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/Main.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/TurnPIDController.dex" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Odometry.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Odometry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/TurnPIDController.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/PIDController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/SampleMecanumDrive.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/SampleMecanumDrive.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TurnTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TurnTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.43.1:5555]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -359,7 +270,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673644975463</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="RoadRunner configuration. Half-way through tuning">
+      <created>1673906557702</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1673906557702</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -392,6 +310,7 @@
     <MESSAGE value="Mee" />
     <MESSAGE value="Debug the turnheading" />
     <MESSAGE value="Added PID to linear slide." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added PID to linear slide." />
+    <MESSAGE value="RoadRunner configuration. Half-way through tuning" />
+    <option name="LAST_COMMIT_MESSAGE" value="RoadRunner configuration. Half-way through tuning" />
   </component>
 </project>
