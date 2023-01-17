@@ -158,8 +158,6 @@ public class Main extends LinearOpMode {
 
             }
 
-            telemetry.addLine("X: " + odo.getX() + "\tY:" + odo.getY());
-            telemetry.update();
         }
     }
 
@@ -234,9 +232,10 @@ public class Main extends LinearOpMode {
         boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
         PIDController slidePIDController;
         if (down) {
-            slidePIDController = new PIDController(ticks, 0.0015, 0.0000001, 0.4, false);
+            slidePIDController = new PIDController(ticks, 0.0015, 0.00001, 1.5, false);
         }else{
-            slidePIDController = new PIDController(ticks, 0.0025, 0.0000001, 0.2, false);
+            //slidePIDController = new PIDController(ticks, 0.004, 0.001, 0.2, false);
+            slidePIDController = new PIDController(ticks, 0.05, 0, 1, false);
         }
         telemetry.setMsTransmissionInterval(50);
 
@@ -246,7 +245,8 @@ public class Main extends LinearOpMode {
         int currentTicks = LinearSlide.getCurrentPosition();
 
         while((Math.abs(currentTicks - ticks) > 10) && opModeIsActive()){
-            telemetry.addLine("Stuck in loopz");
+            telemetry.addLine("current: " + currentTicks);
+            telemetry.addLine("setpoint" + ticks);
             telemetry.update();
 
             currentTicks = LinearSlide.getCurrentPosition();
