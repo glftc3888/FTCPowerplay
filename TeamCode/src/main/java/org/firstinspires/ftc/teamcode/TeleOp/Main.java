@@ -47,7 +47,7 @@ public class Main extends LinearOpMode {
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private int MAX_LINEAR_SLIDE_EXTENSION = 4080; // in ticks
+    private int MAX_LINEAR_SLIDE_EXTENSION = 4310; // in ticks
     private int ZERO_TICKS_LINEAR_SLIDE = 10; // zero position of linear slides (not 0 due to overextension issues) - in ticks
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
@@ -123,7 +123,7 @@ public class Main extends LinearOpMode {
 
             if (continousMode) {
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                LinearSlide.setPower(-gamepad2.left_stick_y / 2);
+                LinearSlide.setPower(-gamepad2.left_stick_y * 0.75);
             } else {
 
                 //linear slides
@@ -135,7 +135,7 @@ public class Main extends LinearOpMode {
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    setSlideMMAbsolute(595);
+                    setSlideTicksAbsolute(3000);
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
@@ -232,10 +232,10 @@ public class Main extends LinearOpMode {
         boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
         PIDController slidePIDController;
         if (down) {
-            slidePIDController = new PIDController(ticks, 0.0015, 0.00001, 1.5, false);
+            slidePIDController = new PIDController(ticks, 0.00015, 0.0000, 0.1, false);
         }else{
             //slidePIDController = new PIDController(ticks, 0.004, 0.001, 0.2, false);
-            slidePIDController = new PIDController(ticks, 0.05, 0, 1, false);
+            slidePIDController = new PIDController(ticks, 0.0008, 0.0000, 0.1, false);
         }
         telemetry.setMsTransmissionInterval(50);
 
