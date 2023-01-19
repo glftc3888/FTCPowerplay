@@ -47,7 +47,7 @@ public class Main extends LinearOpMode {
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private int MAX_LINEAR_SLIDE_EXTENSION = 4310; // in ticks
+    private int MAX_LINEAR_SLIDE_EXTENSION = 4250; // in ticks
     private int ZERO_TICKS_LINEAR_SLIDE = 10; // zero position of linear slides (not 0 due to overextension issues) - in ticks
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
@@ -228,14 +228,14 @@ public class Main extends LinearOpMode {
 
     // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
-    public void setSlideTicksAbsolute(int ticks) throws InterruptedException{
+    public void setSlideTicksAbsolute(int ticks) {
         boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
         PIDController slidePIDController;
         if (down) {
-            slidePIDController = new PIDController(ticks, 0.00015, 0.0000, 0.1, false);
+            slidePIDController = new PIDController(ticks, 0.0015, 0.0000, 0.2, false);
         }else{
             //slidePIDController = new PIDController(ticks, 0.004, 0.001, 0.2, false);
-            slidePIDController = new PIDController(ticks, 0.0008, 0.0000, 0.1, false);
+            slidePIDController = new PIDController(ticks, 0.008, 0.0000, 0.1, false);
         }
         telemetry.setMsTransmissionInterval(50);
 
@@ -277,7 +277,7 @@ public class Main extends LinearOpMode {
     }
 
     // set linear slide to certain tick position from MILLIMETER measurement upwards
-    public void setSlideMMAbsolute(int mm) throws InterruptedException {
+    public void setSlideMMAbsolute(int mm)   {
         // convert from MM to ticks
         // first convert from mm to rotations (mm / CIRCUMFERENCE) = rotations
         // then convert from rotations to ticks ( rotations * TPR
@@ -285,13 +285,13 @@ public class Main extends LinearOpMode {
         setSlideTicksAbsolute(ticksFromMM);
     }
 
-    public void setSlideBottomAbsolute() throws InterruptedException {
+    public void setSlideBottomAbsolute() {
         setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE);
         LinearSlide.setPower(0);
     }
 
 
-    public void setSlideMaxAbsolute() throws InterruptedException {
+    public void setSlideMaxAbsolute()   {
         setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION);
     }
 
