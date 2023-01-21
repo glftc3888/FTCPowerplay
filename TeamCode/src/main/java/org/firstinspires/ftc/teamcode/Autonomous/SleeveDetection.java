@@ -7,6 +7,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 public class SleeveDetection extends OpenCvPipeline {
     /*

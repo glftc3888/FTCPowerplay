@@ -12,6 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+@Disabled
 @Autonomous(name = "AutoLeft", group = "Autonomous")
 public class AutoLeft extends Main {
 

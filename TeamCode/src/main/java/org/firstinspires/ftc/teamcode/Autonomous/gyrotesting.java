@@ -12,6 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 // code from previous year - encoders, camera, motors
 // https://github.com/greasedlightning/FtcRobotController
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+@Disabled
 @Autonomous(name = "gyrotesting", group = "gyrotesting")
 public class gyrotesting extends Main {
 

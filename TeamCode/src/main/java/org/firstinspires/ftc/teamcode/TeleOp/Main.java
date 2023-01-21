@@ -47,7 +47,7 @@ public class Main extends LinearOpMode {
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private int MAX_LINEAR_SLIDE_EXTENSION = 4080; // in ticks
+    private int MAX_LINEAR_SLIDE_EXTENSION = 4240; // in ticks
     private int ZERO_TICKS_LINEAR_SLIDE = 10; // zero position of linear slides (not 0 due to overextension issues) - in ticks
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
@@ -96,10 +96,10 @@ public class Main extends LinearOpMode {
 
             //servo intake, servo outtake
             if (gamepad2.left_trigger > .6f) {
-                setPowerServo(1);
+                setPowerServo(-.7);
             }
             else if (gamepad2.right_trigger > .6f) {
-                setPowerServo(-1);
+                setPowerServo(1);
             }
             else {// default to not having servo move (only move when triggered)
                 setPowerServo(0);
@@ -123,19 +123,19 @@ public class Main extends LinearOpMode {
 
             if (continousMode) {
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                LinearSlide.setPower(-gamepad2.left_stick_y / 2);
+                LinearSlide.setPower(-gamepad2.left_stick_y * .75);
             } else {
 
                 //linear slides
                 // height 1 (low junction)
 
                 if (gamepad2.a) {
-                    setSlideMMAbsolute(350);
+                    setSlideMMAbsolute(365);
                 }
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    setSlideMMAbsolute(595);
+                    setSlideTicksAbsolute(3000);
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
@@ -148,12 +148,17 @@ public class Main extends LinearOpMode {
                     setSlideBottomAbsolute();
                 }
 
-
-                if (gamepad1.a) {
-                    turnPID(90);
+                if (gamepad1.a){
+                    turnPID(180);
+                }
+                if (gamepad1.b) {
+                    turnPID(-90);
                 }
                 if (gamepad1.y) {
-                    turnPID(0);
+                    turnPID(1);
+                }
+                if(gamepad1.x) {
+                    turnPID(90);
                 }
 
             }
@@ -161,6 +166,20 @@ public class Main extends LinearOpMode {
         }
     }
 
+    //set functions
+    public void setAndConfLinearSlide(DcMotor slide){
+        LinearSlide = slide;
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LinearSlide.setPower(0);
+    }
+
+    public void setAndConfServos(CRServo left, CRServo right){
+        leftServo = left;
+        rightServo = right;
+    }
 
     public void initRobot(){
         // Setup hardware
@@ -196,6 +215,8 @@ public class Main extends LinearOpMode {
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
+
+
         // keep it reverse if you want positive ticks to move linear slide up
         LinearSlide.setDirection(DcMotor.Direction.REVERSE);
 
@@ -228,14 +249,14 @@ public class Main extends LinearOpMode {
 
     // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
-    public void setSlideTicksAbsolute(int ticks) throws InterruptedException{
+    public void setSlideTicksAbsolute(int ticks) {
         boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
         PIDController slidePIDController;
         if (down) {
-            slidePIDController = new PIDController(ticks, 0.0015, 0.00001, 1.5, false);
+            slidePIDController = new PIDController(ticks, 0.0015, 0.0000, 0.2, false);
         }else{
             //slidePIDController = new PIDController(ticks, 0.004, 0.001, 0.2, false);
-            slidePIDController = new PIDController(ticks, 0.05, 0, 1, false);
+            slidePIDController = new PIDController(ticks, 0.008, 0.0000, 0.1, false);
         }
         telemetry.setMsTransmissionInterval(50);
 
@@ -263,9 +284,22 @@ public class Main extends LinearOpMode {
                     setPowerMecanumGamepad(.5);
                 }
                 //servo intake, servo outtake
-                if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
-                else if (gamepad2.right_trigger > .6f) {setPowerServo(-1);}
+                if (gamepad2.left_trigger > .6f) {setPowerServo(-1);}
+                else if (gamepad2.right_trigger > .6f) {setPowerServo(.7);}
                 else {setPowerServo(0);}
+
+                if (gamepad1.a){
+                    turnPID(180);
+                }
+                if (gamepad1.b) {
+                    turnPID(-90);
+                }
+                if (gamepad1.y) {
+                    turnPID(1);
+                }
+                if(gamepad1.x) {
+                    turnPID(90);
+                }
             }
         }
 
@@ -277,7 +311,7 @@ public class Main extends LinearOpMode {
     }
 
     // set linear slide to certain tick position from MILLIMETER measurement upwards
-    public void setSlideMMAbsolute(int mm) throws InterruptedException {
+    public void setSlideMMAbsolute(double mm)  {
         // convert from MM to ticks
         // first convert from mm to rotations (mm / CIRCUMFERENCE) = rotations
         // then convert from rotations to ticks ( rotations * TPR
@@ -285,13 +319,13 @@ public class Main extends LinearOpMode {
         setSlideTicksAbsolute(ticksFromMM);
     }
 
-    public void setSlideBottomAbsolute() throws InterruptedException {
+    public void setSlideBottomAbsolute()  {
         setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE);
         LinearSlide.setPower(0);
     }
 
 
-    public void setSlideMaxAbsolute() throws InterruptedException {
+    public void setSlideMaxAbsolute()  {
         setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION);
     }
 
@@ -465,8 +499,8 @@ public class Main extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        PIDController pid = new PIDController(targetAngle, 0.01, 0.000, 0.006, true);
-        telemetry.setMsTransmissionInterval(50);
+        PIDController pid = new PIDController(targetAngle, 0.023, 0.000, 0.006, true);
+        //telemetry.setMsTransmissionInterval(50);
         // Checking lastSlope to make sure that it's not oscillating when it quits
         //boolean mode = (teleop)? opModeIsActive() : true;
         //boolean mode = opModeIsActive();

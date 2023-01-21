@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+@Disabled
 @TeleOp(name = "Odometry", group = "TeleOp")
-
-
 public class Odometry extends Main {
     // Motors
     private DcMotor frontLeftMotor;
