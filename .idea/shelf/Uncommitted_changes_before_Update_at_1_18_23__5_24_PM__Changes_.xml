@@ -1,0 +1,104 @@
+<changelist name="Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]" date="1674080688705" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 1/18/23, 5:24 PM [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="TeamCode/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" />
+    <option name="AFTER_PATH" value="TeamCode/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/previous-compilation-data.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/8/classes.dex" />
+    <option name="AFTER_PATH" value="TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/8/classes.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/classes.dex" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex" />
+    <option name="AFTER_PATH" value="TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/classes1.dex" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="FtcRobotController/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" />
+    <option name="AFTER_PATH" value="FtcRobotController/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/previous-compilation-data1.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/7.4.2/executionHistory/executionHistory.bin" />
+    <option name="AFTER_PATH" value=".gradle/7.4.2/executionHistory/executionHistory.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/executionHistory.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/Main.dex" />
+    <option name="AFTER_PATH" value="TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/Main.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/Main.dex" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" />
+    <option name="AFTER_PATH" value="FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/FtcRobotControllerActivity.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="FtcRobotController/build/intermediates/javac/debug/classes/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" />
+    <option name="AFTER_PATH" value="FtcRobotController/build/intermediates/javac/debug/classes/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/FtcRobotControllerActivity1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/Main.class" />
+    <option name="AFTER_PATH" value="TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/Main.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/Main.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="FtcRobotController/build/intermediates/javac/debug/classes/com/qualcomm/ftcrobotcontroller/BuildConfig.class" />
+    <option name="AFTER_PATH" value="FtcRobotController/build/intermediates/javac/debug/classes/com/qualcomm/ftcrobotcontroller/BuildConfig.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/BuildConfig.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="TeamCode/build/intermediates/apk/debug/TeamCode-debug.apk" />
+    <option name="AFTER_PATH" value="TeamCode/build/intermediates/apk/debug/TeamCode-debug.apk" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/TeamCode-debug.apk" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/7.4.2/executionHistory/executionHistory.lock" />
+    <option name="AFTER_PATH" value=".gradle/7.4.2/executionHistory/executionHistory.lock" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/executionHistory.lock" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/7.4.2/fileHashes/fileHashes.lock" />
+    <option name="AFTER_PATH" value=".gradle/7.4.2/fileHashes/fileHashes.lock" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/fileHashes.lock" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.class" />
+    <option name="AFTER_PATH" value="FtcRobotController/build/intermediates/runtime_library_classes_dir/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/BuildConfig1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="FtcRobotController/build/intermediates/compile_library_classes_jar/debug/classes.jar" />
+    <option name="AFTER_PATH" value="FtcRobotController/build/intermediates/compile_library_classes_jar/debug/classes.jar" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/classes.jar" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/7.4.2/fileHashes/resourceHashesCache.bin" />
+    <option name="AFTER_PATH" value=".gradle/7.4.2/fileHashes/resourceHashesCache.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/resourceHashesCache.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/11/classes.dex" />
+    <option name="AFTER_PATH" value="TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/11/classes.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/classes2.dex" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/7.4.2/fileHashes/fileHashes.bin" />
+    <option name="AFTER_PATH" value=".gradle/7.4.2/fileHashes/fileHashes.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/fileHashes.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/file-system.probe" />
+    <option name="AFTER_PATH" value=".gradle/file-system.probe" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/file-system.probe" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/buildOutputCleanup/buildOutputCleanup.lock" />
+    <option name="AFTER_PATH" value=".gradle/buildOutputCleanup/buildOutputCleanup.lock" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_18_23,_5_24_PM_[Changes]/buildOutputCleanup.lock" />
+  </binary>
+</changelist>
