@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
@@ -7,9 +12,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a6377a7-9013-41e7-a16a-79109627aa06" name="Changes" comment="AutoLeft, AutoRight">
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline.java" afterDir="false" />
+    <list default="true" id="4a6377a7-9013-41e7-a16a-79109627aa06" name="Changes" comment="not finished auto">
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" afterDir="false" />
@@ -18,6 +21,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FtcRobotController/build/.transforms/a91100992737511d919c6e62218c5e01/transformed/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.dex" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/.transforms/a91100992737511d919c6e62218c5e01/transformed/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FtcRobotController/build/.transforms/a91100992737511d919c6e62218c5e01/transformed/debug/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.dex" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/.transforms/a91100992737511d919c6e62218c5e01/transformed/debug/org/firstinspires/ftc/robotcontroller/internal/FtcRobotControllerActivity.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/generated/source/buildConfig/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/generated/source/buildConfig/debug/com/qualcomm/ftcrobotcontroller/BuildConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/compile_library_classes_jar/debug/classes.jar" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/compile_library_classes_jar/debug/classes.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/javac/debug/classes/com/qualcomm/ftcrobotcontroller/BuildConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/javac/debug/classes/com/qualcomm/ftcrobotcontroller/BuildConfig.class" afterDir="false" />
@@ -29,120 +34,30 @@
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/11/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/11/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/8/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/8/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/13/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/13/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/6/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/6/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/8/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/8/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoRight.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/AutoRight.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection$ParkingPosition.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection$ParkingPosition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/VisionTest$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/VisionTest$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/VisionTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/VisionTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/gyrotesting.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/gyrotesting.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/newautotesting.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/newautotesting.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/Fixing.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/teamcode/TeleOp/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoRight$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoRight.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/AutoRight.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection$ParkingPosition.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection$ParkingPosition.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/VisionTest$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/VisionTest$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/VisionTest.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/VisionTest.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/gyrotesting.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/gyrotesting.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/newautotesting$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/newautotesting.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/newautotesting.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/Fixing.dex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$1.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline$2.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$1.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline$2.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/Main.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/project_dex_archive/debug/out/org/firstinspires/ftc/teamcode/TeleOp/Main.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/DriveConstants.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/SampleMecanumDrive.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/SampleTankDrive.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/StandardTrackingWheelLocalizer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/DriveConstants.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/SampleMecanumDrive.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/SampleTankDrive.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/StandardTrackingWheelLocalizer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/AutomaticFeedforwardTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/BackAndForth.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/DriveVelocityPIDTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/FollowerPIDTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/LocalizationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/ManualFeedforwardTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/MaxAngularVeloTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/MaxVelocityTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/MotorDirectionDebugger.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/SplineTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/StrafeTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/StraightTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TrackWidthTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TrackingWheelForwardOffsetTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TrackingWheelLateralDistanceTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/drive/opmode/TurnTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/AutomaticFeedforwardTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/BackAndForth.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/DriveVelocityPIDTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/FollowerPIDTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/LocalizationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/ManualFeedforwardTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/MaxAngularVeloTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/MaxVelocityTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/MotorDirectionDebugger.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/SplineTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/StrafeTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/StraightTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/TrackWidthTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/TrackingWheelForwardOffsetTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/TrackingWheelLateralDistanceTuner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/drive/opmode/TurnTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/AutoLeft.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/AutoRight.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/AutoRight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoLeft.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/NOOPAutoRight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/SleeveDetection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/VisionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/VisionTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutomaticFeedforwardTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutomaticFeedforwardTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/BackAndForth.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/BackAndForth.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/DriveVelocityPIDTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/DriveVelocityPIDTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/FollowerPIDTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/FollowerPIDTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/LocalizationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/LocalizationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/ManualFeedforwardTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/ManualFeedforwardTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/MaxAngularVeloTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/MaxAngularVeloTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/MaxVelocityTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/MaxVelocityTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/SplineTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/StrafeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/StrafeTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/StraightTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/StraightTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackWidthTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackWidthTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackingWheelForwardOffsetTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackingWheelForwardOffsetTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackingWheelLateralDistanceTuner.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TrackingWheelLateralDistanceTuner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TurnTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/TurnTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/gyrotesting.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/gyrotesting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/newautotesting.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/newautotesting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Fixing.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/DriveConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoLeftSpline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/drive/opmode/AutoRightSpline.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Odometry.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/Odometry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp/SPLINE.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,6 +78,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
@@ -196,7 +116,7 @@
     <property name="com.intellij.openapi.externalSystem.service.settings.ExternalSystemGroupConfigurable" value="ALL" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="memory.settings.postsync.last.time.stamp" value="1667852930766" />
-    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="ReaderModeSettings">
     <option name="enabled" value="false" />
@@ -415,7 +335,21 @@
       <option name="project" value="LOCAL" />
       <updated>1674224891205</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="not finished auto">
+      <created>1674313324257</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1674313324257</updated>
+    </task>
+    <task id="LOCAL-00021" summary="not finished auto">
+      <created>1674313589576</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1674313589576</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -454,6 +388,7 @@
     <MESSAGE value="Going back a few steps to remove all the errors we had yesterday (bad config). Should work if you have roadrunner." />
     <MESSAGE value="Things now don't give an error. To tweak auto." />
     <MESSAGE value="AutoLeft, AutoRight" />
-    <option name="LAST_COMMIT_MESSAGE" value="AutoLeft, AutoRight" />
+    <MESSAGE value="not finished auto" />
+    <option name="LAST_COMMIT_MESSAGE" value="not finished auto" />
   </component>
 </project>

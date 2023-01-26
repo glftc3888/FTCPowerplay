@@ -15,6 +15,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.Queue;
+
 
 // This is an example of a more complex path to really test the tuning.
 @Autonomous(group = "drive")
@@ -24,11 +26,15 @@ public class AutoLeftSpline extends Main {
     private static CRServo leftServo = null;
     private static CRServo rightServo = null;
     private DcMotor LinearSlide = null;
+    public static double MAX_STACK_VAL = 5.6 * 2.54 * 10.0 - 30;
 
     // camera setup
     SleeveDetection sleeveDetection = new SleeveDetection();
     OpenCvCamera camera;
     String webcamName = "Webcam 1";
+
+    //drive setup
+    SampleMecanumDrive drive;
 
     public void initRobotCool(){
         setAndConfLinearSlide(hardwareMap.get(DcMotor.class, "linear_slide"));
@@ -37,9 +43,7 @@ public class AutoLeftSpline extends Main {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-        initRobotCool();
+        drive = new SampleMecanumDrive(hardwareMap);
 
         if (isStopRequested()) return;
 
@@ -59,12 +63,23 @@ public class AutoLeftSpline extends Main {
             public void onError(int errorCode) {}
         });
 
+        initRobotCool();
+
+        // no need for waitForStart() with while loop
+        while (!isStarted()) {
+            telemetry.addData("ROTATION: ", sleeveDetection.getPosition());
+            telemetry.addData("YEL: ", sleeveDetection.yelPercent());
+            telemetry.addData("CYA: ", sleeveDetection.cyaPercent());
+            telemetry.addData("MAG: ", sleeveDetection.magPercent());
+            telemetry.update();
+        }
+
         // get parking position enum
         SleeveDetection.ParkingPosition parkingPosition;
 
         // camera code
         double parkY = -1;
-        while (parkY == -1) {
+        while (parkY == -1) { //while
             parkingPosition = sleeveDetection.getPosition();
             switch (parkingPosition) {
                 case LEFT:
@@ -82,92 +97,123 @@ public class AutoLeftSpline extends Main {
             }
         }
 
-
-        // no need for waitForStart() with while loop
-        while (!isStarted()) {
-            telemetry.addData("ROTATION: ", sleeveDetection.getPosition());
-            telemetry.addData("YEL: ", sleeveDetection.yelPercent());
-            telemetry.addData("CYA: ", sleeveDetection.cyaPercent());
-            telemetry.addData("MAG: ", sleeveDetection.magPercent());
-            telemetry.update();
-        }
-
-        telemetry.addLine("READY!!!!!");
+        telemetry.addLine("READY!!!!!" + parkY);
         telemetry.update();
 
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d())
-                // go to middle of next tile
-                //.lineToConstantHeading(new Vector2d(23.5 * 1, 0))
+        //multiple trajectories
+
+        TrajectorySequence preloadTraj = drive.trajectorySequenceBuilder(new Pose2d())
+
+                // push the cone away
                 .lineTo(new Vector2d(23.5 * 2.5 - 5, 0))
+
                 //move back to the correct position
-                .lineToConstantHeading(new Vector2d(23.5 * 1, 0 - 5.5))
+                .lineToConstantHeading(new Vector2d(23.4 * 1, 0 - 5.5))
                 // move slide up
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     setSlideTicksAbsolute(3000);
                 })
-                // move to align to pole
-                //TO CHANGE
-                .lineToLinearHeading(new Pose2d(23.5 * 2 - 8, (23.5 * .5 - 12) * -1, Math.toRadians(90 * -1)))
+                // move and turn to align to first pole
+                .lineToLinearHeading(new Pose2d(23.5 * 2 - 6.5, (23.5 * .5 - 11.5) * -1, Math.toRadians(90 * -1)))
+                //outtake
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     setPowerServo(1);
                 }).waitSeconds(1)
-                //right height for CONE 5
+                .build();
+
+
+        /*TrajectorySequence preloadTraj = drive.trajectorySequenceBuilder(new Pose2d())
+                // push the cone away
+                .lineTo(new Vector2d(23.5 * 2.5 - 5, 0))
+                // move slide up
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    setSlideTicksAbsolute(3000);
+                })
+                // move and turn to align to first pole
+                .lineToLinearHeading(new Pose2d(23.5 * 2 - 6.5, (23.5 * .5 - 11.5) * -1, Math.toRadians(90 * -1)))
+                //outtake
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    setPowerServo(1);
+                }).waitSeconds(1)
+                .build();*/
+
+        TrajectorySequence positioningTraj = drive.trajectorySequenceBuilder(preloadTraj.end())
+                //Move to correct right height for CONE 5
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     setPowerServo(0);
-                    setSlideMMAbsolute(5.6 * 2.54 * 10.0 - 30);
+                    setSlideMMAbsolute(MAX_STACK_VAL);
                 })
-                // go back a bit
+
+                // Move back to not bump into the pole
                 .lineTo(new Vector2d(23.5 * 2 - 8 + 2, (23.5 * .5 - 12) * -1))
 
-                // now position yourself - START OF CYCLE
+                // Position yourself to be at center - START OF CYCLE
                 .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 10, 0 * -1, Math.toRadians(-90 * -1)))
-                //GOING TO STACK - CHANGE FOR AUTORIGHT
-                //CHANGE: 2" to the right
-                // then go forward
-                .lineTo(new Vector2d(23.5 * 2.5 - 8 + 2, (-23.5 - 3) * -1))
-                // intake for a bit
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(-.3);
-                }).waitSeconds(.2)
-                // move an inch back in order to not bump into field barrier when going up
-                .lineTo(new Vector2d(23.5 * 2.5 - 8, (-23.5 - 1.5) * -1))
-                // stop and move linear slide up
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                    //CHANGE: make it -10 mm down to intake
-                    setSlideMMAbsolute(350);
-                }).waitSeconds(.2)
-                // go to the junction to drop
-                // CHANGE: A little more forward
-                .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 7, (-23.5*.5) * -1, Math.toRadians(180)))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(.5);
-                }).waitSeconds(1.3)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                }).waitSeconds(.2)
-                //go back to center so we can do beautiful parking
+                .build();
+
+        TrajectorySequence cycleTraj5 = buildCycleTraj(4.0/5, positioningTraj.end());
+        TrajectorySequence cycleTraj4 = buildCycleTraj(3.0/5, cycleTraj5.end());
+        TrajectorySequence cycleTraj3 = buildCycleTraj(2.0/5, cycleTraj4.end());
+
+
+        TrajectorySequence parkingTraj = drive.trajectorySequenceBuilder(cycleTraj3.end())
+
+                //beautiful parking
                 .lineToConstantHeading(new Vector2d(23.5 * 2.5 - 8, parkY))
                 //move linear slide down
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     setSlideBottomAbsolute();
                 }).waitSeconds(.2)
-                .lineToConstantHeading(new Vector2d(0, parkY))
-                //NOW Park using camera
-                //.lineToConstantHeading(new Vector2d(23.5 * 2.5, parkY))
-                /*
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                }).waitSeconds(20)
-                */
                 .build();
 
-        while(opModeIsActive() || !isStopRequested()) {
-            //cycle
-            drive.followTrajectorySequence(traj);
+
+
+
+        while(opModeIsActive() && !isStopRequested()) {
+
+            drive.followTrajectorySequence(preloadTraj);
+            drive.followTrajectorySequence(positioningTraj);
+            drive.followTrajectorySequence(cycleTraj5);
+            drive.followTrajectorySequence(cycleTraj4);
+            drive.followTrajectorySequence(cycleTraj3);
+            drive.followTrajectorySequence(parkingTraj);
+
             break;
         }
 
+    }
+
+    public TrajectorySequence buildCycleTraj(double constant, Pose2d end){
+
+        TrajectorySequence ctraj = drive.trajectorySequenceBuilder(end)
+                // Go to cone stack
+                .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 6 + 1.5, (-23.5 - 3) * -1, Math.toRadians(90)))
+                // intake for a bit
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    setPowerServo(-.3);
+                }).waitSeconds(.2)
+                // move an inch back in order to not bump into field barrier when going up
+                .lineTo(new Vector2d(23.5 * 2.5 - 6 + 1.5, (-23.5 - 1) * -1))
+                // stop and move linear slide up
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    setPowerServo(0);
+                    setSlideMMAbsolute(350);
+                }).waitSeconds(.2)
+                // Drop at the junction (and turn to face it)
+                .lineToSplineHeading(new Pose2d(23.5 * 2.5 - 6, (-23.5*.5) * -1, Math.toRadians(180)))
+                //outtake
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    //HYPOTHESIS: Full power = more distance?
+                    setPowerServo(.8);
+                }).waitSeconds(.7)
+                //stop outtake & move linear slide to prepare for next cycle
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    setPowerServo(0);
+                    setSlideMMAbsolute(MAX_STACK_VAL * constant);
+                }).waitSeconds(.2)
+                .build();
+
+        return ctraj;
     }
 }
 

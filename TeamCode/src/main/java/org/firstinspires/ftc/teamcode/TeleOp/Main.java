@@ -95,12 +95,8 @@ public class Main extends LinearOpMode {
             // controlling linear slides and intake -- gamepad 2
 
             //servo intake, servo outtake
-            if (gamepad2.left_trigger > .6f) {
-                setPowerServo(-.7);
-            }
-            else if (gamepad2.right_trigger > .6f) {
-                setPowerServo(1);
-            }
+            if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
+            else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
             else {// default to not having servo move (only move when triggered)
                 setPowerServo(0);
             }
@@ -148,17 +144,18 @@ public class Main extends LinearOpMode {
                     setSlideBottomAbsolute();
                 }
 
+                //FLIP THIS HERE
                 if (gamepad1.a){
-                    turnPID(180);
-                }
-                if (gamepad1.b) {
-                    turnPID(-90);
-                }
-                if (gamepad1.y) {
                     turnPID(1);
                 }
-                if(gamepad1.x) {
+                if (gamepad1.b) {
                     turnPID(90);
+                }
+                if (gamepad1.y) {
+                    turnPID(180);
+                }
+                if(gamepad1.x) {
+                    turnPID(-90);
                 }
 
             }
@@ -270,10 +267,6 @@ public class Main extends LinearOpMode {
             telemetry.addLine("setpoint" + ticks);
             telemetry.update();
 
-            currentTicks = LinearSlide.getCurrentPosition();
-            slidePower = slidePIDController.update(currentTicks);
-            LinearSlide.setPower(slidePower);
-
             //teleop
             if (teleop) {
                 if (gamepad1.left_trigger > .6f) {
@@ -284,23 +277,33 @@ public class Main extends LinearOpMode {
                     setPowerMecanumGamepad(.5);
                 }
                 //servo intake, servo outtake
-                if (gamepad2.left_trigger > .6f) {setPowerServo(-1);}
-                else if (gamepad2.right_trigger > .6f) {setPowerServo(.7);}
+                if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
+                else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
                 else {setPowerServo(0);}
 
+                //FLIP THIS HERE
                 if (gamepad1.a){
-                    turnPID(180);
-                }
-                if (gamepad1.b) {
-                    turnPID(-90);
-                }
-                if (gamepad1.y) {
                     turnPID(1);
                 }
-                if(gamepad1.x) {
+                if (gamepad1.b) {
                     turnPID(90);
                 }
+                if (gamepad1.y) {
+                    turnPID(180);
+                }
+                if(gamepad1.x) {
+                    turnPID(-90);
+                }
+
+                if(gamepad2.right_stick_button){
+                    break;
+                }
+
             }
+
+            currentTicks = LinearSlide.getCurrentPosition();
+            slidePower = slidePIDController.update(currentTicks);
+            LinearSlide.setPower(slidePower);
         }
 
         LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -484,9 +487,9 @@ public class Main extends LinearOpMode {
     }
 
     // move servo for certain amount of (milliseconds) with (power)
-    public void moveServo(long ms, double power) throws InterruptedException {
+    public void moveServo(long ms, double power)  {
         setPowerServo(power);
-        Thread.sleep(ms);
+        sleep(ms);
         setPowerServo(0);
     }
     public void turnPID(double degrees) {
