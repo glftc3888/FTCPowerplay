@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 // Import modules
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -14,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Autonomous.drive.SampleMecanumDrive;
 
 // code from previous year - encoders, camera, motors (we better this year.)
 // https://github.com/greasedlightning/FtcRobotController
@@ -77,21 +80,21 @@ public class Main extends LinearOpMode {
         runtime.reset();
 
         Odometry odo = new Odometry(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
+        //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // Start of OpMode
         while (opModeIsActive()) {
 
-            odo.update();
-
+            //field_centric(drive);
+            //drive centric instead of field centric
+            drive_centric();
+            //odo.update();
+/*
             // move mecanum drivetrain using gamepad values
-            if (gamepad1.left_trigger > .6f) {
-                setPowerMecanumGamepad(.125);
-            } else if (gamepad1.right_trigger > .6f) { // superspeed mode
-                setPowerMecanumGamepad(.8);
-            } else {
-                setPowerMecanumGamepad(.5);
-            }
 
+*/
             // controlling linear slides and intake -- gamepad 2
 
             //servo intake, servo outtake
@@ -161,6 +164,7 @@ public class Main extends LinearOpMode {
             }
 
         }
+
     }
 
     //set functions
@@ -269,13 +273,8 @@ public class Main extends LinearOpMode {
 
             //teleop
             if (teleop) {
-                if (gamepad1.left_trigger > .6f) {
-                    setPowerMecanumGamepad(.125);
-                } else if (gamepad1.right_trigger > .6f) { // superspeed mode
-                    setPowerMecanumGamepad(.8);
-                } else {
-                    setPowerMecanumGamepad(.5);
-                }
+                //drive centric not field centric
+                drive_centric();
                 //servo intake, servo outtake
                 if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
                 else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
@@ -295,7 +294,7 @@ public class Main extends LinearOpMode {
                     turnPID(-90);
                 }
 
-                if(gamepad2.right_stick_button){
+                if(gamepad2.right_stick_button || gamepad2.left_stick_button){
                     break;
                 }
 
@@ -521,6 +520,50 @@ public class Main extends LinearOpMode {
         }
         setMotorPower(0, 0,0,0);
      }
+    public void field_centric(SampleMecanumDrive drive){
+
+        // Read pose
+        Pose2d poseEstimate = drive.getPoseEstimate();
+
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
+
+        Vector2d input = new Vector2d(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x
+        ).rotated(-poseEstimate.getHeading());
+
+        // Pass in the rotated input + right stick value for rotation
+        // Rotation is not part of the rotated input thus must be passed in separately
+        drive.setWeightedDrivePower(
+                new Pose2d(
+                        input.getX(),
+                        input.getY(),
+                        -gamepad1.right_stick_x
+                )
+        );
+
+
+        drive.update();
+
+        // Print pose to telemetry
+        telemetry.addData("x", poseEstimate.getX());
+        telemetry.addData("y", poseEstimate.getY());
+        telemetry.addData("heading", poseEstimate.getHeading());
+        telemetry.update();
+    }
+
+    public void drive_centric(){
+        if (gamepad1.left_trigger > .6f) {
+            setPowerMecanumGamepad(.15);
+        }
+        else if (gamepad1.right_trigger > .6f) { // superspeed mode
+            setPowerMecanumGamepad(.8);
+        }
+        else {
+            setPowerMecanumGamepad(.7);
+        }
+    }
 
 }
 
