@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 // Import modules
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -14,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Autonomous.drive.SampleMecanumDrive;
 
 // code from previous year - encoders, camera, motors (we better this year.)
 // https://github.com/greasedlightning/FtcRobotController
@@ -47,7 +50,7 @@ public class Main extends LinearOpMode {
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private int MAX_LINEAR_SLIDE_EXTENSION = 4250; // in ticks
+    private int MAX_LINEAR_SLIDE_EXTENSION = 4240; // in ticks
     private int ZERO_TICKS_LINEAR_SLIDE = 10; // zero position of linear slides (not 0 due to overextension issues) - in ticks
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
@@ -77,30 +80,26 @@ public class Main extends LinearOpMode {
         runtime.reset();
 
         Odometry odo = new Odometry(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
+        //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // Start of OpMode
         while (opModeIsActive()) {
 
-            odo.update();
-
+            //field_centric(drive);
+            //drive centric instead of field centric
+            drive_centric();
+            //odo.update();
+/*
             // move mecanum drivetrain using gamepad values
-            if (gamepad1.left_trigger > .6f) {
-                setPowerMecanumGamepad(.125);
-            } else if (gamepad1.right_trigger > .6f) { // superspeed mode
-                setPowerMecanumGamepad(.8);
-            } else {
-                setPowerMecanumGamepad(.5);
-            }
 
+*/
             // controlling linear slides and intake -- gamepad 2
 
             //servo intake, servo outtake
-            if (gamepad2.left_trigger > .6f) {
-                setPowerServo(1);
-            }
-            else if (gamepad2.right_trigger > .6f) {
-                setPowerServo(-1);
-            }
+            if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
+            else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
             else {// default to not having servo move (only move when triggered)
                 setPowerServo(0);
             }
@@ -123,14 +122,14 @@ public class Main extends LinearOpMode {
 
             if (continousMode) {
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                LinearSlide.setPower(-gamepad2.left_stick_y * 0.75);
+                LinearSlide.setPower(-gamepad2.left_stick_y * .75);
             } else {
 
                 //linear slides
                 // height 1 (low junction)
 
                 if (gamepad2.a) {
-                    setSlideMMAbsolute(350);
+                    setSlideMMAbsolute(365);
                 }
 
                 // height 2 (medium junction)
@@ -148,19 +147,40 @@ public class Main extends LinearOpMode {
                     setSlideBottomAbsolute();
                 }
 
-
-                if (gamepad1.a) {
+                //FLIP THIS HERE
+                if (gamepad1.a){
+                    turnPID(1);
+                }
+                if (gamepad1.b) {
                     turnPID(90);
                 }
                 if (gamepad1.y) {
-                    turnPID(0);
+                    turnPID(180);
+                }
+                if(gamepad1.x) {
+                    turnPID(-90);
                 }
 
             }
 
         }
+
     }
 
+    //set functions
+    public void setAndConfLinearSlide(DcMotor slide){
+        LinearSlide = slide;
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LinearSlide.setPower(0);
+    }
+
+    public void setAndConfServos(CRServo left, CRServo right){
+        leftServo = left;
+        rightServo = right;
+    }
 
     public void initRobot(){
         // Setup hardware
@@ -195,6 +215,8 @@ public class Main extends LinearOpMode {
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+
 
         // keep it reverse if you want positive ticks to move linear slide up
         LinearSlide.setDirection(DcMotor.Direction.REVERSE);
@@ -249,24 +271,38 @@ public class Main extends LinearOpMode {
             telemetry.addLine("setpoint" + ticks);
             telemetry.update();
 
+            //teleop
+            if (teleop) {
+                //drive centric not field centric
+                drive_centric();
+                //servo intake, servo outtake
+                if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
+                else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
+                else {setPowerServo(0);}
+
+                //FLIP THIS HERE
+                if (gamepad1.a){
+                    turnPID(1);
+                }
+                if (gamepad1.b) {
+                    turnPID(90);
+                }
+                if (gamepad1.y) {
+                    turnPID(180);
+                }
+                if(gamepad1.x) {
+                    turnPID(-90);
+                }
+
+                if(gamepad2.right_stick_button || gamepad2.left_stick_button){
+                    break;
+                }
+
+            }
+
             currentTicks = LinearSlide.getCurrentPosition();
             slidePower = slidePIDController.update(currentTicks);
             LinearSlide.setPower(slidePower);
-
-            //teleop
-            if (teleop) {
-                if (gamepad1.left_trigger > .6f) {
-                    setPowerMecanumGamepad(.125);
-                } else if (gamepad1.right_trigger > .6f) { // superspeed mode
-                    setPowerMecanumGamepad(.8);
-                } else {
-                    setPowerMecanumGamepad(.5);
-                }
-                //servo intake, servo outtake
-                if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
-                else if (gamepad2.right_trigger > .6f) {setPowerServo(-1);}
-                else {setPowerServo(0);}
-            }
         }
 
         LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -277,7 +313,7 @@ public class Main extends LinearOpMode {
     }
 
     // set linear slide to certain tick position from MILLIMETER measurement upwards
-    public void setSlideMMAbsolute(int mm)   {
+    public void setSlideMMAbsolute(double mm)  {
         // convert from MM to ticks
         // first convert from mm to rotations (mm / CIRCUMFERENCE) = rotations
         // then convert from rotations to ticks ( rotations * TPR
@@ -285,13 +321,13 @@ public class Main extends LinearOpMode {
         setSlideTicksAbsolute(ticksFromMM);
     }
 
-    public void setSlideBottomAbsolute() {
+    public void setSlideBottomAbsolute()  {
         setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE);
         LinearSlide.setPower(0);
     }
 
 
-    public void setSlideMaxAbsolute()   {
+    public void setSlideMaxAbsolute()  {
         setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION);
     }
 
@@ -450,9 +486,9 @@ public class Main extends LinearOpMode {
     }
 
     // move servo for certain amount of (milliseconds) with (power)
-    public void moveServo(long ms, double power) throws InterruptedException {
+    public void moveServo(long ms, double power)  {
         setPowerServo(power);
-        Thread.sleep(ms);
+        sleep(ms);
         setPowerServo(0);
     }
     public void turnPID(double degrees) {
@@ -465,8 +501,8 @@ public class Main extends LinearOpMode {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        PIDController pid = new PIDController(targetAngle, 0.01, 0.000, 0.006, true);
-        telemetry.setMsTransmissionInterval(50);
+        PIDController pid = new PIDController(targetAngle, 0.023, 0.000, 0.006, true);
+        //telemetry.setMsTransmissionInterval(50);
         // Checking lastSlope to make sure that it's not oscillating when it quits
         //boolean mode = (teleop)? opModeIsActive() : true;
         //boolean mode = opModeIsActive();
@@ -484,6 +520,50 @@ public class Main extends LinearOpMode {
         }
         setMotorPower(0, 0,0,0);
      }
+    public void field_centric(SampleMecanumDrive drive){
+
+        // Read pose
+        Pose2d poseEstimate = drive.getPoseEstimate();
+
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
+
+        Vector2d input = new Vector2d(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x
+        ).rotated(-poseEstimate.getHeading());
+
+        // Pass in the rotated input + right stick value for rotation
+        // Rotation is not part of the rotated input thus must be passed in separately
+        drive.setWeightedDrivePower(
+                new Pose2d(
+                        input.getX(),
+                        input.getY(),
+                        -gamepad1.right_stick_x
+                )
+        );
+
+
+        drive.update();
+
+        // Print pose to telemetry
+        telemetry.addData("x", poseEstimate.getX());
+        telemetry.addData("y", poseEstimate.getY());
+        telemetry.addData("heading", poseEstimate.getHeading());
+        telemetry.update();
+    }
+
+    public void drive_centric(){
+        if (gamepad1.left_trigger > .6f) {
+            setPowerMecanumGamepad(.15);
+        }
+        else if (gamepad1.right_trigger > .6f) { // superspeed mode
+            setPowerMecanumGamepad(.8);
+        }
+        else {
+            setPowerMecanumGamepad(.7);
+        }
+    }
 
 }
 
