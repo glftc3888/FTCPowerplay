@@ -112,175 +112,66 @@ public class AutoLeftSpline extends Main {
 
         //multiple trajectories
 
-        TrajectorySequence preloadTraj = drive.trajectorySequenceBuilder(new Pose2d())
+//        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-34.95, -64.45, Math.toRadians(90.00)))
+//                .splineTo(new Vector2d(-35.65, -21.95), Math.toRadians(89.05))
+//                .splineTo(new Vector2d(-27.92, -3.86), Math.toRadians(45.00))
+//                .splineTo(new Vector2d(-41.62, -12.64), Math.toRadians(180.00))
+//                .splineTo(new Vector2d(-57.60, -11.77), Math.toRadians(180.00))
+//                .splineTo(new Vector2d(-27.40, -11.77), Math.toRadians(-1.80))
+//                .splineTo(new Vector2d(-23.53, -5.62), Math.toRadians(90.00))
+//                .splineTo(new Vector2d(-26.34, -11.77), Math.toRadians(180.00))
+//                .splineTo(new Vector2d(-58.48, -11.24), Math.toRadians(181.38))
+//                .splineTo(new Vector2d(-28.10, -11.59), Math.toRadians(-4.04))
+//                .splineTo(new Vector2d(-23.36, -6.32), Math.toRadians(90.00))
+//                .splineTo(new Vector2d(-26.69, -11.94), Math.toRadians(180.00))
+//                .splineTo(new Vector2d(-59.18, -11.94), Math.toRadians(180.00))
+//                .splineTo(new Vector2d(-23.18, -11.77), Math.toRadians(0.00))
+//                .splineTo(new Vector2d(-23.53, -4.57), Math.toRadians(90.00))
+//                .build();
+//        drive.setPoseEstimate(untitled0.start());
 
-                // push the cone away
-                .lineToConstantHeading(new Vector2d(23.5 * 2.5 - 5, 0))
+        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-35.82, -64.45, Math.toRadians(90.00)))
+                .splineToLinearHeading(new Pose2d(-12.47, -56.20, Math.toRadians(90.00)), Math.toRadians(90.00))
+                .splineToLinearHeading(new Pose2d(-11.59, -13.00, Math.toRadians(90.00)), Math.toRadians(90.00))
+                .lineToSplineHeading(new Pose2d(-24.41, -9.31, Math.toRadians(90.00)))
+                .lineToSplineHeading(new Pose2d(-38.99, -11.77, Math.toRadians(180.00)))
+                .lineTo(new Vector2d(-62.17, -11.94))
+                .lineTo(new Vector2d(-41.62, -12.64))
+                .lineToSplineHeading(new Pose2d(-24.06, -9.83, Math.toRadians(90.00)))
+                .lineToSplineHeading(new Pose2d(-38.81, -12.12, Math.toRadians(180.00)))
+                .lineToSplineHeading(new Pose2d(-62.87, -11.77, Math.toRadians(180.00)))
+                .lineTo(new Vector2d(-41.62, -12.12))
+                .lineToSplineHeading(new Pose2d(-24.41, -9.48, Math.toRadians(90.00)))
+                .lineToSplineHeading(new Pose2d(-38.99, -12.12, Math.toRadians(180.00)))
+                .lineToSplineHeading(new Pose2d(-62.34, -12.12, Math.toRadians(180.00)))
+                .lineTo(new Vector2d(-41.97, -12.12))
+                .lineToSplineHeading(new Pose2d(-24.76, -9.48, Math.toRadians(90.00)))
+                .lineToSplineHeading(new Pose2d(-39.16, -12.47, Math.toRadians(180.00)))
+                .lineToSplineHeading(new Pose2d(-62.69, -12.29, Math.toRadians(180.00)))
+                .lineTo(new Vector2d(-42.15, -12.29))
+                .lineToSplineHeading(new Pose2d(-24.06, -9.66, Math.toRadians(90.00)))
 
-                // move slide up
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setSlideTicksAbsolute(3000);
+                .addSpatialMarker(new Vector2d(-12, -20), () -> {
+                    setSlideMaxAbsolute();
                 })
-                // move and turn to align to first pole
-                .lineToLinearHeading(new Pose2d(23.5 * 2 - 9, (23.5 * .5 - 10) * -1, Math.toRadians(90 * -1)))
-                //outtake
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(1);
-                }).waitSeconds(1)
-                .build();
 
 
-        /*TrajectorySequence preloadTraj = drive.trajectorySequenceBuilder(new Pose2d())
-                // push the cone away
-                .lineTo(new Vector2d(23.5 * 2.5 - 5, 0))
-                // move slide up
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setSlideTicksAbsolute(3000);
-                })
-                // move and turn to align to first pole
-                .lineToLinearHeading(new Pose2d(23.5 * 2 - 6.5, (23.5 * .5 - 11.5) * -1, Math.toRadians(90 * -1)))
-                //outtake
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(1);
-                }).waitSeconds(1)
-                .build();*/
+//                .addSpatialMarker(new Vector2d(-34.95, -16.16), () -> {
+//
+//                })
 
-        TrajectorySequence positioningTraj = drive.trajectorySequenceBuilder(preloadTraj.end())
-                //Move to correct right height for CONE 5
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                    setSlideMMAbsolute(MAX_STACK_VAL);
-                })
-
-                // Move back to not bump into the pole
-                .lineTo(new Vector2d(23.5 * 2 - 4.5, (23.5 * .5 - 12) * -1))
-
-                // Position yourself to be at center - START OF CYCLE
-                .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 10, 0 * -1, Math.toRadians(-90 * -1)))
-                .build();
-
-        /*
-        TrajectorySequence cycleTraj5 = buildCycleTraj(4.0/5, positioningTraj.end());
-        TrajectorySequence cycleTraj4 = buildCycleTraj(3.0/5, cycleTraj5.end());
-        TrajectorySequence cycleTraj3 = buildCycleTraj(2.0/5, cycleTraj4.end());
-         */
-
-        TrajectorySequence cycleTrajHigh = buildHighCycleTraj(4.0/5, positioningTraj.end());
-        TrajectorySequence cycleTrajLow = buildLowCycleTraj(0.0, cycleTrajHigh.end());
-
-
-        TrajectorySequence parkingTraj = drive.trajectorySequenceBuilder(cycleTrajLow.end())
-
-                //beautiful parking
-                .lineToConstantHeading(new Vector2d(23.5 * 2.5 - 5, parkY)).setVelConstraint(new TrajectoryVelocityConstraint() {
-                    @Override
-                    public double get(double v, @NonNull Pose2d pose2d, @NonNull Pose2d pose2d1, @NonNull Pose2d pose2d2) {
-                        return 53;
-                    }
-                })
-                .setAccelConstraint(new TrajectoryAccelerationConstraint() {
-                    @Override
-                    public double get(double v, @NonNull Pose2d pose2d, @NonNull Pose2d pose2d1, @NonNull Pose2d pose2d2) {
-                        return 45;
-                    }
-                })
-                //move linear slide down - DON'T NEED THIS ANYMORE (SLIDE GOES DOES AFTER TRAJECTORY LOW)
-                /*.UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setSlideBottomAbsolute();
-                }).waitSeconds(.2)
-                */
 
                 .build();
 
-
+        drive.setPoseEstimate(untitled0.start());
 
         while(opModeIsActive() && !isStopRequested()) {
 
-
-            drive.followTrajectorySequence(preloadTraj);
-            drive.followTrajectorySequence(positioningTraj);
-            drive.followTrajectorySequence(cycleTrajHigh);
-            drive.followTrajectorySequence(cycleTrajLow);
-            drive.followTrajectorySequence(parkingTraj);
-
+            drive.followTrajectorySequence(untitled0);
 
             break;
         }
 
-    }
-
-    public TrajectorySequence buildHighCycleTraj(double constant, Pose2d end) {
-        TrajectorySequence ctraj = drive.trajectorySequenceBuilder(end)
-                // Go to cone stack
-                .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 6.75, (-23.5 - 3.5) * -1, Math.toRadians(90)))
-                // intake for a bit
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(-.3);
-                }).waitSeconds(.3)
-
-                // stop and move linear slide up (TO CORRECT ONE TO SAVE TIME)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                    setSlideMaxAbsolute();
-                }).waitSeconds(.2)
-
-                // move an inch back in order to not bump into field barrier when going up
-                .lineTo(new Vector2d(23.5 * 2.5 - 6.75, (-23.5 - 1.25) * -1))
-
-                // THIS CHANGES BUT SHOULD BE EASY MONEY
-                // Go to (A LITTLE BIT BACK OF) junction (and turn to face it)
-                .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 8, (23.5*.5 + 1.5) * -1, Math.toRadians(0)))
-                // Go to (EXACTLY AT) junction
-                .lineToConstantHeading(new Vector2d(23.5 * 2.5 - 8 + 4.2, (23.5*.5 + 1.5) * -1))
-                //outtake
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    //HYPOTHESIS: Full power = more distance?
-                    setPowerServo(1);
-                }).waitSeconds(.6)
-                //stop outtake & move linear slide to prepare for next cycle
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                    setSlideMMAbsolute(MAX_STACK_VAL * constant);
-                }).waitSeconds(.2)
-                // GO to (A LITTLE BIT BACK OF/AGAIN) junction
-                .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 8, (23.5*.5 + 3.25) * -1, Math.toRadians(0)))
-                .build();
-
-        return ctraj;
-    }
-
-
-    public TrajectorySequence buildLowCycleTraj(double constant, Pose2d end){
-
-        TrajectorySequence ctraj = drive.trajectorySequenceBuilder(end)
-                // Go to cone stack
-                .lineToLinearHeading(new Pose2d(23.5 * 2.5 - 6.75, (-23.5 - 3.5) * -1, Math.toRadians(90)))
-                // intake for a bit
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(-.3);
-                }).waitSeconds(.3)
-                // stop and move linear slide up
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                    setSlideMMAbsolute(350);
-                }).waitSeconds(.2)
-                // move an inch back in order to not bump into field barrier when going up
-                .lineTo(new Vector2d(23.5 * 2.5 - 6.75, (-23.5 - 1.25) * -1))
-                // Drop at the junction (and turn to face it)
-                .lineToSplineHeading(new Pose2d(23.5 * 2.5 - 8 + .5, (-23.5*.5 - .25) * -1, Math.toRadians(180)))
-                //outtake
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    //HYPOTHESIS: Full power = more distance?
-                    setPowerServo(1);
-                }).waitSeconds(.6)
-                //stop outtake & move linear slide to prepare for next cycle
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    setPowerServo(0);
-                    setSlideMMAbsolute(MAX_STACK_VAL * constant);
-                }).waitSeconds(.2)
-                .build();
-
-        return ctraj;
     }
 }
 
