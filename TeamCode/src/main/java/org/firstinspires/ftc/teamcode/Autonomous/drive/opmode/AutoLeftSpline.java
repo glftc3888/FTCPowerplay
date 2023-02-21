@@ -1,17 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous.drive.opmode;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.path.Path;
-import com.acmerobotics.roadrunner.path.PathSegment;
-import com.acmerobotics.roadrunner.path.QuinticSpline;
-import com.acmerobotics.roadrunner.path.heading.HeadingInterpolator;
-import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
-import com.acmerobotics.roadrunner.trajectory.config.TrajectoryConfig;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,23 +10,41 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Autonomous.SleeveDetection;
 import org.firstinspires.ftc.teamcode.Autonomous.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.TeleOp.Main;
+import org.firstinspires.ftc.teamcode.TeleOp.PIDController;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-
-import java.util.Queue;
 
 
 // This is an example of a more complex path to really test the tuning.
 @Autonomous(group = "drive")
 public class AutoLeftSpline extends Main {
 
-    //only servo and linear slide initialization
-    private static CRServo leftServo = null;
-    private static CRServo rightServo = null;
-    private DcMotor LinearSlide = null;
-    public static double MAX_STACK_VAL = 5.6 * 2.54 * 10.0 - 30;
+    enum State {
+        IDLE,
+
+        //Trajectories
+        PRELOAD_TRAJ,
+        GO_STACK_TRAJ,
+        GO_HIGH_TRAJ,
+        PARK,
+
+        //Stack
+        UNSTACK_WHILE_MOVING_UP,
+
+        //Intake/Slide
+        INTAKE,
+        OUTTAKE,
+    }
+
+    // We define the current state we're on
+    // Default to IDLE
+    State currentState = State.IDLE;
+
+    //INITIALIZATION
+
+    LinearSlideHolder slideHolder = new LinearSlideHolder();
 
     // camera setup
     SleeveDetection sleeveDetection = new SleeveDetection();
@@ -46,21 +54,14 @@ public class AutoLeftSpline extends Main {
     //drive setup
     SampleMecanumDrive drive;
 
-    public void initRobotCool(){
-        setAndConfLinearSlide(hardwareMap.get(DcMotor.class, "linear_slide"));
-        setAndConfServos(hardwareMap.crservo.get("left_servo"), hardwareMap.crservo.get("right_servo"));
-    }
-
     @Override
     public void runOpMode() throws InterruptedException {
-        drive = new SampleMecanumDrive(hardwareMap);
 
-        if (isStopRequested()) return;
 
+        // CAMERA
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
         camera.setPipeline(sleeveDetection);
-
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -73,7 +74,11 @@ public class AutoLeftSpline extends Main {
             public void onError(int errorCode) {}
         });
 
-        initRobotCool();
+        //INITIALIZE
+        //Initialize the drive, lift, and servo
+        drive = new SampleMecanumDrive(hardwareMap);
+        Lift lift = new Lift();
+        Servos servo = new Servos();
 
         // no need for waitForStart() with while loop
         while (!isStarted()) {
@@ -83,23 +88,23 @@ public class AutoLeftSpline extends Main {
             telemetry.addData("MAG: ", sleeveDetection.magPercent());
             telemetry.update();
         }
+        if (isStopRequested()) return;
 
         // get parking position enum
         SleeveDetection.ParkingPosition parkingPosition;
-
         // camera code
         double parkY = -1;
         while (parkY == -1) { //while
             parkingPosition = sleeveDetection.getPosition();
             switch (parkingPosition) {
                 case LEFT:
-                    parkY = 23.5 + 4;
+                    parkY = -23.5 * 2;
                     break;
                 case CENTER:
-                    parkY = 0;
+                    parkY = -23.5;
                     break;
                 case RIGHT:
-                    parkY = -23.5 - 4;
+                    parkY = 0;
                     break;
                 case NOTHING: // default, keep at -1
                     parkY = -1;
@@ -107,71 +112,220 @@ public class AutoLeftSpline extends Main {
             }
         }
 
-        telemetry.addLine("READY!!!!!" + parkY);
+        telemetry.addLine("READY!!!!! " + parkY);
         telemetry.update();
 
-        //multiple trajectories
+        /*
+        // Alternative to go to stack
+        .lineToSplineHeading(new Pose2d(-38.99, -11.77, Math.toRadians(180.00)))
+        .lineTo(new Vector2d(-62.17, -11.94))
+         */
 
-//        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-34.95, -64.45, Math.toRadians(90.00)))
-//                .splineTo(new Vector2d(-35.65, -21.95), Math.toRadians(89.05))
-//                .splineTo(new Vector2d(-27.92, -3.86), Math.toRadians(45.00))
-//                .splineTo(new Vector2d(-41.62, -12.64), Math.toRadians(180.00))
-//                .splineTo(new Vector2d(-57.60, -11.77), Math.toRadians(180.00))
-//                .splineTo(new Vector2d(-27.40, -11.77), Math.toRadians(-1.80))
-//                .splineTo(new Vector2d(-23.53, -5.62), Math.toRadians(90.00))
-//                .splineTo(new Vector2d(-26.34, -11.77), Math.toRadians(180.00))
-//                .splineTo(new Vector2d(-58.48, -11.24), Math.toRadians(181.38))
-//                .splineTo(new Vector2d(-28.10, -11.59), Math.toRadians(-4.04))
-//                .splineTo(new Vector2d(-23.36, -6.32), Math.toRadians(90.00))
-//                .splineTo(new Vector2d(-26.69, -11.94), Math.toRadians(180.00))
-//                .splineTo(new Vector2d(-59.18, -11.94), Math.toRadians(180.00))
-//                .splineTo(new Vector2d(-23.18, -11.77), Math.toRadians(0.00))
-//                .splineTo(new Vector2d(-23.53, -4.57), Math.toRadians(90.00))
-//                .build();
-//        drive.setPoseEstimate(untitled0.start());
-
-        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-35.82, -64.45, Math.toRadians(90.00)))
+        TrajectorySequence preload_trajectory = drive.trajectorySequenceBuilder(new Pose2d(-35.82, -64.45, Math.toRadians(90.00)))
+                // SCORE PRELOAD TRAJECTORY
                 .splineToLinearHeading(new Pose2d(-12.47, -56.20, Math.toRadians(90.00)), Math.toRadians(90.00))
                 .splineToLinearHeading(new Pose2d(-11.59, -13.00, Math.toRadians(90.00)), Math.toRadians(90.00))
                 .lineToSplineHeading(new Pose2d(-24.41, -9.31, Math.toRadians(90.00)))
-                .lineToSplineHeading(new Pose2d(-38.99, -11.77, Math.toRadians(180.00)))
-                .lineTo(new Vector2d(-62.17, -11.94))
-                .lineTo(new Vector2d(-41.62, -12.64))
-                .lineToSplineHeading(new Pose2d(-24.06, -9.83, Math.toRadians(90.00)))
-                .lineToSplineHeading(new Pose2d(-38.81, -12.12, Math.toRadians(180.00)))
-                .lineToSplineHeading(new Pose2d(-62.87, -11.77, Math.toRadians(180.00)))
-                .lineTo(new Vector2d(-41.62, -12.12))
-                .lineToSplineHeading(new Pose2d(-24.41, -9.48, Math.toRadians(90.00)))
-                .lineToSplineHeading(new Pose2d(-38.99, -12.12, Math.toRadians(180.00)))
-                .lineToSplineHeading(new Pose2d(-62.34, -12.12, Math.toRadians(180.00)))
-                .lineTo(new Vector2d(-41.97, -12.12))
-                .lineToSplineHeading(new Pose2d(-24.76, -9.48, Math.toRadians(90.00)))
-                .lineToSplineHeading(new Pose2d(-39.16, -12.47, Math.toRadians(180.00)))
-                .lineToSplineHeading(new Pose2d(-62.69, -12.29, Math.toRadians(180.00)))
-                .lineTo(new Vector2d(-42.15, -12.29))
-                .lineToSplineHeading(new Pose2d(-24.06, -9.66, Math.toRadians(90.00)))
-
-                .addSpatialMarker(new Vector2d(-12, -20), () -> {
-                    setSlideMaxAbsolute();
-                })
-
-
-//                .addSpatialMarker(new Vector2d(-34.95, -16.16), () -> {
-//
-//                })
-
-
                 .build();
 
-        drive.setPoseEstimate(untitled0.start());
+        TrajectorySequence go_stack_trajectory = drive.trajectorySequenceBuilder(preload_trajectory.end())
+                // GO TO STACK
+                .lineToSplineHeading(new Pose2d(-38.81, -12.12, Math.toRadians(180.00)))
+                .lineToSplineHeading(new Pose2d(-62.87, -11.77, Math.toRadians(180.00)))
+                .build();
+
+        TrajectorySequence go_high_junction_trajectory = drive.trajectorySequenceBuilder(go_stack_trajectory.end())
+                // GOING TO SCORE HIGH
+                .lineTo(new Vector2d(-41.62, -12.64))
+                .lineToSplineHeading(new Pose2d(-24.06, -9.83, Math.toRadians(90.00)))
+                .build();
+
+        TrajectorySequence park_trajectory = drive.trajectorySequenceBuilder(go_high_junction_trajectory.end())
+                .lineToConstantHeading(new Vector2d(-12 - parkY, -12))
+                .build();
+
+        drive.setPoseEstimate(preload_trajectory.start());
+
+        /*IDLE,
+
+        //Trajectories
+        PRELOAD_TRAJ,
+        GO_STACK_TRAJ,
+        GO_HIGH_TRAJ,
+        PARK,
+
+        //Stack
+        UNSTACK_WHILE_MOVING_UP,
+
+        //Intake/Slide
+        INTAKE,
+        OUTTAKE,*/
+
+        currentState = State.PRELOAD_TRAJ;
+        drive.followTrajectorySequenceAsync(preload_trajectory);
+        lift.setHighPosition();
 
         while(opModeIsActive() && !isStopRequested()) {
 
-            drive.followTrajectorySequence(untitled0);
+            switch (currentState) {
+                case PRELOAD_TRAJ:
+                    telemetry.addLine(String.valueOf(lift.isBusy()));
+                    telemetry.addLine("Set Ticks:" + (int) (4240 * (384.5 / 537.7)));
+                    telemetry.addLine("Actual Ticks:" + lift.LinearSlide.getCurrentPosition());
+                    telemetry.update();
 
-            break;
+                    if (!drive.isBusy() && !lift.isBusy()){
+                        currentState = State.OUTTAKE;
+                    }
+                    break;
+                case OUTTAKE:
+                    moveServo(1300, -1);
+
+                    boolean finished_with_cycle = lift.setStackPosition();
+                    //logic to finish cycling all 5 cones
+                    if (finished_with_cycle) {
+                        currentState = State.PARK;
+                        drive.followTrajectorySequenceAsync(park_trajectory);
+                        lift.setStackPosition();
+                    }else{
+                        currentState = State.GO_STACK_TRAJ;
+                        drive.followTrajectorySequenceAsync(go_stack_trajectory);
+                    }
+                    break;
+                case GO_STACK_TRAJ:
+                    if (!drive.isBusy() && !lift.isBusy()){
+                        moveServo(200, 1);
+                        currentState = State.UNSTACK_WHILE_MOVING_UP;
+                        lift.setHighPosition();
+                    }
+                    break;
+                case UNSTACK_WHILE_MOVING_UP:
+                    if (lift.hasSurpassedStack()){
+                        currentState = State.GO_HIGH_TRAJ;
+                        drive.followTrajectorySequenceAsync(go_high_junction_trajectory);
+                    }
+                case GO_HIGH_TRAJ:
+                    if (!drive.isBusy() && !lift.isBusy()){
+                        currentState = State.OUTTAKE;
+                    }
+                    break;
+                case PARK:
+                    if (!drive.isBusy() && !lift.isBusy()){
+                        currentState = State.IDLE;
+                    }
+                    break;
+                case IDLE:
+                    slideHolder.setLinearSlide(lift.getLinearSlide());
+                    break;
+            }
+
+            drive.update();
+            lift.update();
         }
 
+    }
+
+     // LIFT CLASS FOR STATE MACHINE
+     public class Lift {
+        PIDController slidePIDController;
+        public int targetPos = 0;
+        public boolean isStabilized = false;
+        public double currentCone = 5;
+
+         private static final double LinearSlideTPR = ((((1+((double)46/17))) * (1+((double)46/17))) * 28); //ticks per revolution according to gobilda site - 435 rpm
+         // circumference of the pulley circle pulling the string in linear slides
+         private static final double CIRCUMFERENCE = 112; // in mm
+
+        public DcMotor LinearSlide;
+
+        private int HIGH_EXTENSION = (int) (4240 * (384.5 / 537.7)); // in ticks
+        private int MAX_STACK_VAL = (int) ((5.6 * 2.54 * 10.0 - 30) / CIRCUMFERENCE * LinearSlideTPR);
+        private int HEIGHT_CONE_TICKS = 505;
+        private double HEIGHT_FROM_GRAB_TO_TOP_TICKS = HEIGHT_CONE_TICKS - (int) (4240 * (384.5 / 537.7) * 1/5);
+
+        public Lift(){
+            LinearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
+            setAndConfLinearSlide(LinearSlide);
+        }
+
+        public DcMotor getLinearSlide(){
+            return LinearSlide;
+        }
+
+        public boolean isBusy(){
+            return !isStabilized;
+        }
+
+        public void setTargetPosition(int ticks){
+            targetPos = ticks;
+            boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
+            if (down) {
+                slidePIDController = new PIDController(targetPos, 0.0015, 0.0000, 0.2, false);
+            }else{
+                //slidePIDController = new PIDController(ticks, 0.004, 0.001, 0.2, false);
+                slidePIDController = new PIDController(targetPos, 0.008, 0.0000, 0.1, false);
+            }
+            LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        public void setHighPosition(){
+            setTargetPosition(HIGH_EXTENSION);
+        }
+
+        public boolean setStackPosition(){
+            double l_ratio = currentCone / 5;
+            setTargetPosition((int) (MAX_STACK_VAL * l_ratio));
+            currentCone--;
+            return !(currentCone >= 0);
+        }
+
+        public boolean hasSurpassedStack(){
+            return (LinearSlide.getCurrentPosition() > ( HEIGHT_FROM_GRAB_TO_TOP_TICKS + (currentCone / 5) ) );
+        }
+
+        public void update() {
+            int currentTicks = LinearSlide.getCurrentPosition();
+            double slidePower = slidePIDController.update(currentTicks);
+            if ((Math.abs(currentTicks - targetPos) > 20)) {
+                LinearSlide.setPower(slidePower);
+            }else if (!isStabilized){
+                LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                LinearSlide.setTargetPosition(targetPos);
+                LinearSlide.setPower(slidePower);
+                LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                isStabilized = true;
+            }
+
+        }
+    }
+    // INTAKE CLASS FOR STATE MACHINE
+    public class Servos {
+
+        public CRServo leftServo, rightServo;
+
+        public Servos(){
+            leftServo = hardwareMap.crservo.get("left_servo");
+            rightServo = hardwareMap.crservo.get("right_servo");
+            setAndConfServos(leftServo, rightServo);
+        }
+
+        public void intake(int ms) throws InterruptedException {
+            //right trigger
+            setPowerServo(-1);
+            //Thread.sleep(ms);
+            //kill();
+        }
+
+        public void outtake(int ms) throws InterruptedException {
+            //right trigger
+            setPowerServo(1);
+            //Thread.sleep(ms);
+            //kill();
+        }
+
+        public void kill(){
+            setPowerServo(0);
+        }
     }
 }
 

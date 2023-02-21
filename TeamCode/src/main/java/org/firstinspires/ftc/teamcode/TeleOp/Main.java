@@ -7,16 +7,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Autonomous.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Autonomous.drive.opmode.LinearSlideHolder;
 
 // code from previous year - encoders, camera, motors (we better this year.)
 // https://github.com/greasedlightning/FtcRobotController
@@ -36,10 +41,11 @@ public class Main extends LinearOpMode {
     private static CRServo rightServo = null;
 
     private DcMotor LinearSlide = null;
+    //private static Rev2mDistanceSensor distanceSensor = null;
 
     boolean teleop = false;
 
-    // will use later... This is for angle (see code from last year)
+    // will use later... This is for angle (see code from 2last year)
     BNO055IMU Gyro;
 
     // roughly 537.7, but ((((1+(46/17))) * (1+(46/11))) * 28) to be exact (on the site)
@@ -47,10 +53,11 @@ public class Main extends LinearOpMode {
     // https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     // Ticks Per Rotation (how many ticks in one full motor rotation)
     private static final double TPR = (1+((double)46/17)) * (1+((double)46/11)) * 28;// ticks per revolution
+    private static final double LinearSlideTPR = ((((1+((double)46/17))) * (1+((double)46/17))) * 28); //ticks per revolution according to gobilda site - 435 rpm
     // circumference of the pulley circle pulling the string in linear slides
     private static final double CIRCUMFERENCE = 112; // in mm
     // DON'T USE THIS, IF IT'S TOO MUCH IT MIGHT BREAK THE LINEAR SLIDE
-    private int MAX_LINEAR_SLIDE_EXTENSION = 4240; // in ticks
+    private int MAX_LINEAR_SLIDE_EXTENSION = (int) (4240 * (384.5 / 537.7)); // in ticks
     private int ZERO_TICKS_LINEAR_SLIDE = 10; // zero position of linear slides (not 0 due to overextension issues) - in ticks
     private static final double RADIUS = 4.8; // in cm
     private static final double PI=3.1415926535;
@@ -60,7 +67,12 @@ public class Main extends LinearOpMode {
     double globalAngle;
 
     boolean continousMode = false;
+    boolean isIntaked = false;
     int position = 0;
+    double ENDGAME = 90;
+
+    //controllers rumbling
+    Gamepad.RumbleEffect rumbleSequence;
 
 
     @Override
@@ -73,6 +85,7 @@ public class Main extends LinearOpMode {
 
         teleop = true;
 
+        //init the robot
         initRobot();
 
         // Wait for start
@@ -83,6 +96,14 @@ public class Main extends LinearOpMode {
         //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        //NEW and HOT: Rumbling
+        rumbleSequence = new Gamepad.RumbleEffect.Builder()
+                .addStep(1, 0, 250)
+                .addStep(0, 1, 250)
+                .addStep(1, 0, 250)
+                .addStep(0, 1, 250)
+                .build();
+
 
         // Start of OpMode
         while (opModeIsActive()) {
@@ -91,11 +112,47 @@ public class Main extends LinearOpMode {
             //drive centric instead of field centric
             drive_centric();
             //odo.update();
-/*
+
+            /*
+            //Distance sensor
+            telemetry.addData("range", String.format("%.01f mm", distanceSensor.getDistance(DistanceUnit.MM)));
+            telemetry.addLine(String.valueOf(isIntaked));
+            telemetry.update();
+
+            if ((distanceSensor.getDistance(DistanceUnit.MM) < 24))
+            {
+                double INTAKE_RUMBLE = .15;
+
+                gamepad1.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
+                gamepad2.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
+
+                gamepad1.rumble(INTAKE_RUMBLE, INTAKE_RUMBLE, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+                gamepad2.rumble(INTAKE_RUMBLE, INTAKE_RUMBLE, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+
+            } else {
+                gamepad1.setLedColor(.33, 0, .67, Gamepad.LED_DURATION_CONTINUOUS);
+                gamepad2.setLedColor(.33, 0, .67, Gamepad.LED_DURATION_CONTINUOUS);
+
+                gamepad1.stopRumble();
+                gamepad2.stopRumble();
+            }
+             */
+
+            /*
             // move mecanum drivetrain using gamepad values
 
 */
+
             // controlling linear slides and intake -- gamepad 2
+            /*if ( Math.abs( runtime.seconds() - ENDGAME ) < 1){
+                gamepad1.runRumbleEffect(rumbleSequence);
+                gamepad2.runRumbleEffect(rumbleSequence);
+            }
+
+            if ( Math.abs( runtime.seconds() - (ENDGAME + 20) ) < 1){
+                gamepad1.runRumbleEffect(rumbleSequence);
+                gamepad2.runRumbleEffect(rumbleSequence);
+            }*/
 
             //servo intake, servo outtake
             if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
@@ -117,24 +174,24 @@ public class Main extends LinearOpMode {
 
             // do things depending on states
             position = LinearSlide.getCurrentPosition();
-            telemetry.addLine(String.valueOf(position));
-            telemetry.update();
+            /*telemetry.addLine(String.valueOf(position));
+            telemetry.update();*/
 
             if (continousMode) {
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                LinearSlide.setPower(-gamepad2.left_stick_y * .75);
+                LinearSlide.setPower(-gamepad2.left_stick_y);
             } else {
 
                 //linear slides
                 // height 1 (low junction)
 
                 if (gamepad2.a) {
-                    setSlideMMAbsolute(365);
+                    setSlideMMAbsolute((int) (365 * (384.5 / 537.7)));
                 }
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    setSlideTicksAbsolute(3000);
+                    setSlideTicksAbsolute((int) (3000 * (384.5 / 537.7)));
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
@@ -190,10 +247,15 @@ public class Main extends LinearOpMode {
         backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
 
         LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+        //Use the linear slide from AUTO
+        //LinearSlide = (new LinearSlideHolder()).getLinearSlide();
 
         leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
-        rightServo = hardwareMap.crservo.get("right_servo");                 //right CR Servo
+        rightServo = hardwareMap.crservo.get("right_servo");               //right CR Servo
+        //distanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor");
 
+        // you can also cast this to a Rev2mDistanceSensor if you want to use added
+        // methods associated with the Rev2mDistanceSensor class.
 
         imu = hardwareMap.get(BNO055IMU.class, "Gyro");
 
@@ -267,9 +329,9 @@ public class Main extends LinearOpMode {
         int currentTicks = LinearSlide.getCurrentPosition();
 
         while((Math.abs(currentTicks - ticks) > 10) && opModeIsActive()){
-            telemetry.addLine("current: " + currentTicks);
+            /*telemetry.addLine("current: " + currentTicks);
             telemetry.addLine("setpoint" + ticks);
-            telemetry.update();
+            telemetry.update();*/
 
             //teleop
             if (teleop) {
@@ -317,7 +379,7 @@ public class Main extends LinearOpMode {
         // convert from MM to ticks
         // first convert from mm to rotations (mm / CIRCUMFERENCE) = rotations
         // then convert from rotations to ticks ( rotations * TPR
-        int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * TPR);
+        int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * LinearSlideTPR);
         setSlideTicksAbsolute(ticksFromMM);
     }
 
@@ -446,8 +508,8 @@ public class Main extends LinearOpMode {
             backLeftMotor.setPower(power);
 
             err = (angle-this.getAngle());
-            telemetry.addLine(String.valueOf(this.getAngle()));
-            telemetry.update();
+            /*telemetry.addLine(String.valueOf(this.getAngle()));
+            telemetry.update();*/
         }
 
     }
@@ -512,11 +574,11 @@ public class Main extends LinearOpMode {
             double motorPower = pid.update(getAbsoluteAngle());
             setMotorPower(motorPower, motorPower, -motorPower, -motorPower);
 
-            telemetry.addData("Current Angle", getAbsoluteAngle());
+            /*telemetry.addData("Current Angle", getAbsoluteAngle());
             telemetry.addData("Target Angle", targetAngle);
             telemetry.addData("Slope", pid.getLastSlope());
             telemetry.addData("Power", motorPower);
-            telemetry.update();
+            telemetry.update();*/
         }
         setMotorPower(0, 0,0,0);
      }
