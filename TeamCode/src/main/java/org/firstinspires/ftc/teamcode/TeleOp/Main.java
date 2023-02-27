@@ -41,7 +41,7 @@ public class Main extends LinearOpMode {
     private static CRServo rightServo = null;
 
     private DcMotor LinearSlide = null;
-    //private static Rev2mDistanceSensor distanceSensor = null;
+    private static Rev2mDistanceSensor distanceSensor = null;
 
     boolean teleop = false;
 
@@ -67,9 +67,11 @@ public class Main extends LinearOpMode {
     double globalAngle;
 
     boolean continousMode = false;
-    boolean isIntaked = false;
     int position = 0;
     double ENDGAME = 90;
+
+    //fancy distance sensors
+    int prepressed_height = ZERO_TICKS_LINEAR_SLIDE;
 
     //controllers rumbling
     Gamepad.RumbleEffect rumbleSequence;
@@ -108,40 +110,15 @@ public class Main extends LinearOpMode {
         // Start of OpMode
         while (opModeIsActive()) {
 
-            //field_centric(drive);
-            //drive centric instead of field centric
             drive_centric();
-            //odo.update();
-
-            /*
-            //Distance sensor
-            telemetry.addData("range", String.format("%.01f mm", distanceSensor.getDistance(DistanceUnit.MM)));
-            telemetry.addLine(String.valueOf(isIntaked));
-            telemetry.update();
-
-            if ((distanceSensor.getDistance(DistanceUnit.MM) < 24))
-            {
-                double INTAKE_RUMBLE = .15;
-
-                gamepad1.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
-                gamepad2.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
-
-                gamepad1.rumble(INTAKE_RUMBLE, INTAKE_RUMBLE, Gamepad.RUMBLE_DURATION_CONTINUOUS);
-                gamepad2.rumble(INTAKE_RUMBLE, INTAKE_RUMBLE, Gamepad.RUMBLE_DURATION_CONTINUOUS);
-
-            } else {
-                gamepad1.setLedColor(.33, 0, .67, Gamepad.LED_DURATION_CONTINUOUS);
-                gamepad2.setLedColor(.33, 0, .67, Gamepad.LED_DURATION_CONTINUOUS);
-
-                gamepad1.stopRumble();
-                gamepad2.stopRumble();
-            }
-             */
+            //field_centric(drive);
+            //Distance Sensor Functions
+            distanceIntakedRumble();
 
             /*
             // move mecanum drivetrain using gamepad values
 
-*/
+            */
 
             // controlling linear slides and intake -- gamepad 2
             /*if ( Math.abs( runtime.seconds() - ENDGAME ) < 1){
@@ -155,11 +132,9 @@ public class Main extends LinearOpMode {
             }*/
 
             //servo intake, servo outtake
-            if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
-            else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
-            else {// default to not having servo move (only move when triggered)
-                setPowerServo(0);
-            }
+            if (gamepad2.left_trigger > .6f) {intake(1);}
+            else if (gamepad2.right_trigger > .6f) {outtake(.7);}
+            else {kill_intake();}
 
             // state variables (switching between them)
             // NO LOCKING
@@ -186,22 +161,22 @@ public class Main extends LinearOpMode {
                 // height 1 (low junction)
 
                 if (gamepad2.a) {
-                    setSlideMMAbsolute((int) (365 * (384.5 / 537.7)));
+                    prepressSlideBehavior(ticksFromMM((365 * (384.5 / 537.7))));
                 }
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    setSlideTicksAbsolute((int) (3000 * (384.5 / 537.7)));
+                    prepressSlideBehavior((int) (3000 * (384.5 / 537.7)));
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
                 if (gamepad2.y) {
-                    setSlideMaxAbsolute();
+                    prepressSlideBehavior(MAX_LINEAR_SLIDE_EXTENSION);
                 }
 
                 // down from any position
                 if (gamepad2.x) {
-                    setSlideBottomAbsolute();
+                    prepressSlideBehavior(ZERO_TICKS_LINEAR_SLIDE);
                 }
 
                 //FLIP THIS HERE
@@ -222,6 +197,31 @@ public class Main extends LinearOpMode {
 
         }
 
+    }
+
+    //DISTANCE SENSOR FUNCTIONS
+    public boolean isIntaked(){
+        return (distanceSensor.getDistance(DistanceUnit.MM) < 24);
+    }
+
+    public void distanceIntakedRumble(){
+        if (isIntaked())
+        {
+            double INTAKE_RUMBLE = .15;
+
+            gamepad1.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
+            gamepad2.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
+
+            gamepad1.rumble(INTAKE_RUMBLE, INTAKE_RUMBLE, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            gamepad2.rumble(INTAKE_RUMBLE, INTAKE_RUMBLE, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+
+        } else {
+            gamepad1.setLedColor(.33, 0, .67, Gamepad.LED_DURATION_CONTINUOUS);
+            gamepad2.setLedColor(.33, 0, .67, Gamepad.LED_DURATION_CONTINUOUS);
+
+            gamepad1.stopRumble();
+            gamepad2.stopRumble();
+        }
     }
 
     //set functions
@@ -252,7 +252,7 @@ public class Main extends LinearOpMode {
 
         leftServo = hardwareMap.crservo.get("left_servo");                 //left CR Servo
         rightServo = hardwareMap.crservo.get("right_servo");               //right CR Servo
-        //distanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor");
+        distanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor");
 
         // you can also cast this to a Rev2mDistanceSensor if you want to use added
         // methods associated with the Rev2mDistanceSensor class.
@@ -296,6 +296,10 @@ public class Main extends LinearOpMode {
 
     }
 
+    public void prepressSlideBehavior(int ticks){
+        setSlideTicksAbsolute(ticks);
+    }
+
     public void setPowerMecanumGamepad(double constant){
         double leftX = gamepad1.left_stick_x;
         double leftY = gamepad1.left_stick_y;
@@ -306,6 +310,42 @@ public class Main extends LinearOpMode {
         frontRightMotor.setPower((leftY + leftX + rightX) * constant);
         backRightMotor.setPower((leftY - leftX + rightX)* constant);
         backLeftMotor.setPower((leftY + leftX - rightX)* constant);
+    }
+
+    public void drive_centric_turning(double constant) {
+        double leftX = gamepad1.left_stick_x;
+        double leftY = gamepad1.left_stick_y;
+        double rightX = gamepad1.right_stick_x;
+
+        double targetAngle = Math.toDegrees(Math.atan2(leftY, leftX));
+
+        PIDController pidControllerFL = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
+        PIDController pidControllerFR = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
+        PIDController pidControllerBR = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
+        PIDController pidControllerBL = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
+
+        double flPower = (leftY - leftX - rightX) * constant;
+        double frPower = (leftY + leftX + rightX) * constant;
+        double brPower = (leftY - leftX + rightX) * constant;
+        double blPower = (leftY + leftX - rightX) * constant;
+
+
+        double currentFL = frontLeftMotor.getCurrentPosition();
+        double currentFR = frontRightMotor.getCurrentPosition();
+        double currentBR = backRightMotor.getCurrentPosition();
+        double currentBL = backLeftMotor.getCurrentPosition();
+
+
+        flPower += pidControllerFL.update(currentFL);
+        frPower += pidControllerFR.update(currentFR);
+        brPower += pidControllerBR.update(currentBR);
+        blPower += pidControllerBL.update(currentBL);
+
+
+        frontLeftMotor.setPower(flPower);
+        frontRightMotor.setPower(frPower);
+        backRightMotor.setPower(brPower);
+        backLeftMotor.setPower(blPower);
     }
 
 
@@ -329,18 +369,20 @@ public class Main extends LinearOpMode {
         int currentTicks = LinearSlide.getCurrentPosition();
 
         while((Math.abs(currentTicks - ticks) > 10) && opModeIsActive()){
-            /*telemetry.addLine("current: " + currentTicks);
+            telemetry.addLine("current: " + currentTicks);
             telemetry.addLine("setpoint" + ticks);
-            telemetry.update();*/
+            telemetry.update();
 
             //teleop
             if (teleop) {
                 //drive centric not field centric
                 drive_centric();
                 //servo intake, servo outtake
-                if (gamepad2.left_trigger > .6f) {setPowerServo(1);}
+                if (gamepad2.left_trigger > .6f) {intake(1);}
                 else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
                 else {setPowerServo(0);}
+
+                distanceIntakedRumble();
 
                 //FLIP THIS HERE
                 if (gamepad1.a){
@@ -374,13 +416,28 @@ public class Main extends LinearOpMode {
 
     }
 
+    public void intake(double power){
+        setPowerServo(power);
+    }
+
+    public void outtake(double power){
+        setPowerServo(-power);
+    }
+
+    public void kill_intake(){
+        setPowerServo(0);
+    }
+
+    public int ticksFromMM(double mm){
+        return (int)( (mm / CIRCUMFERENCE) * LinearSlideTPR);
+    }
+
     // set linear slide to certain tick position from MILLIMETER measurement upwards
     public void setSlideMMAbsolute(double mm)  {
         // convert from MM to ticks
         // first convert from mm to rotations (mm / CIRCUMFERENCE) = rotations
         // then convert from rotations to ticks ( rotations * TPR
-        int ticksFromMM = (int)( (mm / CIRCUMFERENCE) * LinearSlideTPR);
-        setSlideTicksAbsolute(ticksFromMM);
+        setSlideTicksAbsolute(ticksFromMM(mm));
     }
 
     public void setSlideBottomAbsolute()  {
