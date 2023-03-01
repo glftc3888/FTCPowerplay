@@ -40,6 +40,8 @@ public class Main extends LinearOpMode {
     private static CRServo leftServo = null;
     private static CRServo rightServo = null;
 
+    private Lift lift = null;
+
     private DcMotor LinearSlide = null;
     private static Rev2mDistanceSensor distanceSensor = null;
 
@@ -71,7 +73,6 @@ public class Main extends LinearOpMode {
     double ENDGAME = 90;
 
     //fancy distance sensors
-    int prepressed_height = ZERO_TICKS_LINEAR_SLIDE;
 
     //controllers rumbling
     Gamepad.RumbleEffect rumbleSequence;
@@ -106,6 +107,7 @@ public class Main extends LinearOpMode {
                 .addStep(0, 1, 250)
                 .build();
 
+        lift.setZeroPosition();
 
         // Start of OpMode
         while (opModeIsActive()) {
@@ -148,49 +150,58 @@ public class Main extends LinearOpMode {
             }
 
             // do things depending on states
-            position = LinearSlide.getCurrentPosition();
             /*telemetry.addLine(String.valueOf(position));
             telemetry.update();*/
 
             if (continousMode) {
+                //ADD: CONT MODE
+                /*
                 LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 LinearSlide.setPower(-gamepad2.left_stick_y);
+                 */
+                lift.continousMode(gamepad2.left_stick_y);
             } else {
-
+                //ADD: NON-CONT MODE
                 //linear slides
                 // height 1 (low junction)
 
+                if (gamepad2.a){lift.setLowPosition();}
+                if (gamepad2.b){lift.setMediumPosition();}
+                if (gamepad2.y){lift.setHighPosition();}
+                if (gamepad2.x){lift.setZeroPosition();}
+                lift.update();
+                /*
                 if (gamepad2.a) {
-                    prepressSlideBehavior(ticksFromMM((365 * (384.5 / 537.7))));
+                    setSlideTicksAbsolute( (int) ((ticksFromMM(375) * (384.5 / 537.7)) ));
                 }
 
                 // height 2 (medium junction)
                 if (gamepad2.b) {
-                    prepressSlideBehavior((int) (3000 * (384.5 / 537.7)));
+                    setSlideTicksAbsolute((int) (3000 * (384.5 / 537.7)));
                 }
 
                 // height 3 (high junction) -- 850mm, but we can't go that much yet
                 if (gamepad2.y) {
-                    prepressSlideBehavior(MAX_LINEAR_SLIDE_EXTENSION);
+                    setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION);
                 }
 
                 // down from any position
                 if (gamepad2.x) {
-                    prepressSlideBehavior(ZERO_TICKS_LINEAR_SLIDE);
-                }
+                    setSlideTicksAbsolute(ZERO_TICKS_LINEAR_SLIDE);
+                }*/
 
                 //FLIP THIS HERE
                 if (gamepad1.a){
-                    turnPID(1);
-                }
-                if (gamepad1.b) {
-                    turnPID(90);
-                }
-                if (gamepad1.y) {
                     turnPID(180);
                 }
-                if(gamepad1.x) {
+                if (gamepad1.b) {
                     turnPID(-90);
+                }
+                if (gamepad1.y) {
+                    turnPID(1);
+                }
+                if(gamepad1.x) {
+                    turnPID(90);
                 }
 
             }
@@ -207,7 +218,7 @@ public class Main extends LinearOpMode {
     public void distanceIntakedRumble(){
         if (isIntaked())
         {
-            double INTAKE_RUMBLE = .15;
+            double INTAKE_RUMBLE = .1;
 
             gamepad1.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
             gamepad2.setLedColor(1, .8, 0, Gamepad.LED_DURATION_CONTINUOUS);
@@ -223,6 +234,7 @@ public class Main extends LinearOpMode {
             gamepad2.stopRumble();
         }
     }
+
 
     //set functions
     public void setAndConfLinearSlide(DcMotor slide){
@@ -246,7 +258,19 @@ public class Main extends LinearOpMode {
         frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
         backRightMotor = hardwareMap.get(DcMotor.class, "back_right");
 
-        LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+        lift = new Lift();
+
+        /*LinearSlide  = hardwareMap.get(DcMotor.class, "linear_slide");
+        // keep it reverse if you want positive ticks to move linear slide up
+        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
+
+        //when you're setting it up (in opMode)
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LinearSlide.setPower(0);*/
+
         //Use the linear slide from AUTO
         //LinearSlide = (new LinearSlideHolder()).getLinearSlide();
 
@@ -271,34 +295,19 @@ public class Main extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        LinearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
-
-
-
-        // keep it reverse if you want positive ticks to move linear slide up
-        LinearSlide.setDirection(DcMotor.Direction.REVERSE);
-
-        //when you're setting it up (in opMode)
-        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontRightMotor.setPower(0);
 
-        LinearSlide.setPower(0);
 
     }
 
-    public void prepressSlideBehavior(int ticks){
-        setSlideTicksAbsolute(ticks);
-    }
 
     public void setPowerMecanumGamepad(double constant){
         double leftX = gamepad1.left_stick_x;
@@ -311,64 +320,66 @@ public class Main extends LinearOpMode {
         backRightMotor.setPower((leftY - leftX + rightX)* constant);
         backLeftMotor.setPower((leftY + leftX - rightX)* constant);
     }
+/*
+    public void setSlideTicksAbsoluteEncoders(int ticks, double power){
 
-    public void drive_centric_turning(double constant) {
-        double leftX = gamepad1.left_stick_x;
-        double leftY = gamepad1.left_stick_y;
-        double rightX = gamepad1.right_stick_x;
+        LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LinearSlide.setPower(power);
+        LinearSlide.setTargetPosition(ticks);
+        LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        double targetAngle = Math.toDegrees(Math.atan2(leftY, leftX));
+        while(LinearSlide.isBusy()){
+            //teleop
+            if (teleop) {
+                //drive centric not field centric
+                drive_centric();
 
-        PIDController pidControllerFL = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
-        PIDController pidControllerFR = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
-        PIDController pidControllerBR = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
-        PIDController pidControllerBL = new PIDController(targetAngle, 0.01, 0.001, 0.01, true);
+                //servo intake, servo outtake
+                if (gamepad2.left_trigger > .6f) {intake(1);}
+                else if (gamepad2.right_trigger > .6f) {setPowerServo(-.7);}
+                else {setPowerServo(0);}
 
-        double flPower = (leftY - leftX - rightX) * constant;
-        double frPower = (leftY + leftX + rightX) * constant;
-        double brPower = (leftY - leftX + rightX) * constant;
-        double blPower = (leftY + leftX - rightX) * constant;
+                distanceIntakedRumble();
 
+                //BTW, THIS DOES NOT WORK ASYNCHRONOUSLY, IT WOULD STOP THE ENTIRE PID LOOP FOR TURNING
+                //FLIP THIS HERE
 
-        double currentFL = frontLeftMotor.getCurrentPosition();
-        double currentFR = frontRightMotor.getCurrentPosition();
-        double currentBR = backRightMotor.getCurrentPosition();
-        double currentBL = backLeftMotor.getCurrentPosition();
-
-
-        flPower += pidControllerFL.update(currentFL);
-        frPower += pidControllerFR.update(currentFR);
-        brPower += pidControllerBR.update(currentBR);
-        blPower += pidControllerBL.update(currentBL);
+                if (gamepad1.a){turnPID(180);}
+                if (gamepad1.b) {turnPID(-90);}
+                if (gamepad1.y) {turnPID(1);}
+                if(gamepad1.x) {turnPID(90);}
+                if(gamepad2.right_stick_button || gamepad2.left_stick_button){break;}
 
 
-        frontLeftMotor.setPower(flPower);
-        frontRightMotor.setPower(frPower);
-        backRightMotor.setPower(brPower);
-        backLeftMotor.setPower(blPower);
+            }
+        }
+        LinearSlide.setPower(.1);
     }
-
-
 
     // Make sure the encoder cables are connected right, and the the forward/backward is in the right place
     // setSlideTicksAbsolute moves the linear slide to a certain tick POSITION (not BY a certain amount)
     public void setSlideTicksAbsolute(int ticks) {
         boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
+        boolean use_pid = down;
         PIDController slidePIDController;
         if (down) {
-            slidePIDController = new PIDController(ticks, 0.0015, 0.0000, 0.2, false);
+            slidePIDController = new PIDController(ticks, 0.0010, 0.0000, 0.02, false);
         }else{
             //slidePIDController = new PIDController(ticks, 0.004, 0.001, 0.2, false);
-            slidePIDController = new PIDController(ticks, 0.008, 0.0000, 0.1, false);
+            slidePIDController = new PIDController(ticks, 0.009, 0.0000, .8, false);
         }
-        telemetry.setMsTransmissionInterval(50);
+
+        if(!use_pid){
+            setSlideTicksAbsoluteEncoders(ticks, 1);
+            return;
+        }
 
         LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double slidePower = 0;
         int currentTicks = LinearSlide.getCurrentPosition();
 
-        while((Math.abs(currentTicks - ticks) > 10) && opModeIsActive()){
+        while((Math.abs(currentTicks - ticks) > 20) && opModeIsActive()){
             telemetry.addLine("current: " + currentTicks);
             telemetry.addLine("setpoint" + ticks);
             telemetry.update();
@@ -384,18 +395,19 @@ public class Main extends LinearOpMode {
 
                 distanceIntakedRumble();
 
+                //BTW, THIS DOES NOT WORK ASYNCHRONOUSLY, IT WOULD STOP THE ENTIRE PID LOOP FOR TURNING
                 //FLIP THIS HERE
                 if (gamepad1.a){
-                    turnPID(1);
-                }
-                if (gamepad1.b) {
-                    turnPID(90);
-                }
-                if (gamepad1.y) {
                     turnPID(180);
                 }
-                if(gamepad1.x) {
+                if (gamepad1.b) {
                     turnPID(-90);
+                }
+                if (gamepad1.y) {
+                    turnPID(1);
+                }
+                if(gamepad1.x) {
+                    turnPID(90);
                 }
 
                 if(gamepad2.right_stick_button || gamepad2.left_stick_button){
@@ -414,7 +426,7 @@ public class Main extends LinearOpMode {
         LinearSlide.setPower(slidePower);
         LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-    }
+    }*/
 
     public void intake(double power){
         setPowerServo(power);
@@ -431,7 +443,7 @@ public class Main extends LinearOpMode {
     public int ticksFromMM(double mm){
         return (int)( (mm / CIRCUMFERENCE) * LinearSlideTPR);
     }
-
+/*
     // set linear slide to certain tick position from MILLIMETER measurement upwards
     public void setSlideMMAbsolute(double mm)  {
         // convert from MM to ticks
@@ -450,7 +462,7 @@ public class Main extends LinearOpMode {
         setSlideTicksAbsolute(MAX_LINEAR_SLIDE_EXTENSION);
     }
 
-
+*/
 
     public boolean isBusy() {
         return (frontLeftMotor.isBusy() || backLeftMotor.isBusy() || backRightMotor.isBusy() || frontRightMotor.isBusy());
@@ -677,10 +689,130 @@ public class Main extends LinearOpMode {
             setPowerMecanumGamepad(.15);
         }
         else if (gamepad1.right_trigger > .6f) { // superspeed mode
-            setPowerMecanumGamepad(.8);
+            setPowerMecanumGamepad(1);
         }
         else {
-            setPowerMecanumGamepad(.7);
+            setPowerMecanumGamepad(.8);
+        }
+    }
+
+    // LIFT CLASS FOR ASYNCHRONOUS
+
+    // LIFT CLASS FOR STATE MACHINE
+    public class Lift {
+        PIDController slidePIDController;
+        public int targetPos = 0;
+        public boolean isStabilized = false;
+        public double currentCone = 5;
+
+        private static final double LinearSlideTPR = ((((1+((double)46/17))) * (1+((double)46/17))) * 28); //ticks per revolution according to gobilda site - 435 rpm
+        // circumference of the pulley circle pulling the string in linear slides
+        private static final double CIRCUMFERENCE = 112; // in mm
+
+        public DcMotor LinearSlide;
+        private int LOW_EXTENSION =  (int)(385 / CIRCUMFERENCE * LinearSlideTPR);
+        private int HIGH_EXTENSION = (int) (4240 * (384.5 / 537.7)); // in ticks
+        private int MEDIUM_EXTENSION = (int) (3000 * (384.5 / 537.7)); // in ticks
+        private int MAX_STACK_VAL = (int) ((5.6 * 2.54 * 10.0 - 30) / CIRCUMFERENCE * LinearSlideTPR);
+        private int HEIGHT_CONE_TICKS = 505;
+        //BTW THIS IS WRONG, it takes high extension for some reason?
+        private double HEIGHT_FROM_GRAB_TO_TOP_TICKS = HEIGHT_CONE_TICKS - (int) (4240 * (384.5 / 537.7) * 1/5);
+
+        public Lift(){
+            isStabilized = false;
+            LinearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
+            setAndConfLinearSlide(LinearSlide);
+        }
+
+        public DcMotor getLinearSlide(){
+            return LinearSlide;
+        }
+
+        public boolean isBusy(){
+            return !isStabilized;
+        }
+
+        public double getAdditiveFactorY() {
+            // 5th -> 0, 4th -> 1, etc...
+            return .37 * (5 - currentCone); // in inches
+        }
+
+        public double getAdditiveFactorX() {
+            // 5th -> 0, 4th -> 1, etc...
+            return .3 * (5 - currentCone); // in inches
+        }
+
+        public void continousMode(double input){
+            LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            LinearSlide.setPower(-input);
+        }
+
+        public void setTargetPosition(int ticks){
+            targetPos = ticks;
+            isStabilized = false;
+            LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            boolean down = ((ticks - LinearSlide.getCurrentPosition()) < 0)? true : false;
+            if (down) {
+                slidePIDController = new PIDController(targetPos, 0.0015, 0.0000, 0.2, false);
+            }else{
+                //slidePIDController = new PIDController(ticks, 0.004, 0.001, 0.2, false);
+                slidePIDController = new PIDController(targetPos, 0.008, 0.0000, 0.1, false);
+            }
+        }
+
+        public void setLowPosition(){
+            setTargetPosition(LOW_EXTENSION);
+        }
+        public void setMediumPosition(){
+            setTargetPosition(MEDIUM_EXTENSION);
+        }
+        public void setHighPosition(){
+            setTargetPosition(HIGH_EXTENSION);
+        }
+
+        public boolean setStackPosition(){
+            double l_ratio = currentCone / 5;
+            telemetry.addLine(String.valueOf(currentCone));
+            telemetry.update();
+
+            if (currentCone == 2){
+                l_ratio = 1.7/5;
+            }else if(currentCone == 1){
+                l_ratio = 0.02/5;
+            }
+            setTargetPosition((int) (MAX_STACK_VAL * l_ratio));
+
+            currentCone--;
+            return !(currentCone >= 0);
+        }
+
+        public void setZeroPosition(){
+            setTargetPosition(0);
+        }
+
+        public boolean hasSurpassedStack(){
+            return (LinearSlide.getCurrentPosition() > ( HEIGHT_FROM_GRAB_TO_TOP_TICKS + (currentCone / 5) ) );
+        }
+
+        public void update() {
+            int currentTicks = LinearSlide.getCurrentPosition();
+            double slidePower = slidePIDController.update(currentTicks);
+            int TOLERANCE = 20;
+            if (!isStabilized) {
+                if ((Math.abs(currentTicks - targetPos) > TOLERANCE)) {
+                    LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    LinearSlide.setPower(slidePower);
+                }
+                // two "if"s intead of if -> else because we need to do one right after the other
+                if (! (Math.abs(currentTicks - targetPos) > TOLERANCE) ) {
+                    LinearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    LinearSlide.setTargetPosition(targetPos);
+                    LinearSlide.setPower(.1);
+                    LinearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    isStabilized = true;
+                }
+            }
+
         }
     }
 

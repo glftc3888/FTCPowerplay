@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 // This is an example of a more complex path to really test the tuning.
 @Autonomous(group = "drive")
 public class AutoRightSpline extends Main {
-
+/*
     //only servo and linear slide initialization
     private static CRServo leftServo = null;
     private static CRServo rightServo = null;
@@ -157,15 +157,13 @@ public class AutoRightSpline extends Main {
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     setPowerServo(0);
                 }).waitSeconds(20)
-                */
+
                 .build();
 
         while(opModeIsActive() || !isStopRequested()) {
             //cycle
             drive.followTrajectorySequence(traj);
             break;
-        }
-
+        }*/
     }
-}
 
