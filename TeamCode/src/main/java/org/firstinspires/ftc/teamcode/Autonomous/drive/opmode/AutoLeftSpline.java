@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.Autonomous.drive.opmode;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,6 +29,7 @@ public class AutoLeftSpline extends Main {
     enum State {
         IDLE,
 
+        //ALT PRELOAD
         //Trajectories
         PRELOAD_TRAJ,
         GO_STACK_TRAJ,
@@ -119,11 +124,35 @@ public class AutoLeftSpline extends Main {
 
         telemetry.addLine("READY!!!!! " + parkY);
         telemetry.update();
+/*
+        TrajectorySequence preload_trajectory_p1 = drive.trajectorySequenceBuilder(new Pose2d(-36.00, -63.37, Math.toRadians(90.00)))
+                .lineToConstantHeading(new Vector2d(-11.94, -58.83))
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(preload_trajectory_p2))
+                .build();
 
+        TrajectorySequence preload_trajectory_p2 = drive.trajectorySequenceBuilder(preload_trajectory_p1.end())
+                .lineToConstantHeading(new Vector2d(-9.83, -14.93))
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(preload_trajectory_3))
+                .build();
+
+        TrajectorySequence preload_trajectory_p3 = drive.trajectorySequenceBuilder(preload_trajectory_p2.end())
+                .lineToConstantHeading(new Vector2d(-24, -11.20 + .5))
+                .build();
+ */
         TrajectorySequence preload_trajectory = drive.trajectorySequenceBuilder(new Pose2d(-36.00, -63.37, Math.toRadians(90.00)))
                 .lineToConstantHeading(new Vector2d(-11.94, -58.83))
                 .lineToConstantHeading(new Vector2d(-9.83, -14.93))
                 .lineToConstantHeading(new Vector2d(-24, -11.20 + .5))
+                .setVelConstraint(new TrajectoryVelocityConstraint() {
+                    @Override
+                    public double get(double v, @NonNull Pose2d pose2d, @NonNull Pose2d pose2d1, @NonNull Pose2d pose2d2) {
+                        return 53;}})
+                .setAccelConstraint(new TrajectoryAccelerationConstraint() {
+                    @Override
+                    public double get(double v, @NonNull Pose2d pose2d, @NonNull Pose2d pose2d1, @NonNull Pose2d pose2d2) {
+                        return 39;
+                    }
+                })
                 .build();
 
         /*TrajectorySequence preload_trajectory = drive.trajectorySequenceBuilder(new Pose2d(-36.00, -63.37, Math.toRadians(90.00)))
@@ -134,8 +163,10 @@ public class AutoLeftSpline extends Main {
 
         TrajectorySequence go_stack_preload_trajectory = drive.trajectorySequenceBuilder(preload_trajectory.end())
                 .lineToSplineHeading(new Pose2d(-36.18, -14.58, Math.toRadians(135.00)))
-                .lineToLinearHeading(new Pose2d(-63.97, -12.25, Math.toRadians(180.00)))
+                //.lineToLinearHeading(new Pose2d(-63.97, -12.25, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(-63.6, -12.25, Math.toRadians(180.00)))
                 .build();
+
 // previous one
         /*
         TrajectorySequence go_low_junction_trajectory = drive.trajectorySequenceBuilder(go_stack_preload_trajectory.end())
@@ -148,13 +179,14 @@ public class AutoLeftSpline extends Main {
         TrajectorySequence go_low_junction_trajectory = drive.trajectorySequenceBuilder(new Pose2d(-64.00, -12.25, Math.toRadians(180.00)))
                 //.lineToConstantHeading(new Vector2d(-64 + 4, -12.23))
                 .splineToLinearHeading(new Pose2d(-64 + 4, -12.23, Math.toRadians(180)), Math.toRadians(180))
-                .lineToLinearHeading(new Pose2d(-48.03, -12.25 - 1.95, Math.toRadians(270.00)))
+                .lineToLinearHeading(new Pose2d(-48.03, -12.25 - 2.0, Math.toRadians(270.00)))
                 .build();
 
 
         TrajectorySequence go_stack_low_trajectory = drive.trajectorySequenceBuilder(go_low_junction_trajectory.end())
                 .lineTo(new Vector2d(-47.88, -12.16))
-                .lineToSplineHeading(new Pose2d(-63.98, -12.22, Math.toRadians(180.00)))
+                //.lineToSplineHeading(new Pose2d(-63.98, -12.22, Math.toRadians(180.00)))
+                .lineToSplineHeading(new Pose2d(-63.54, -12.22, Math.toRadians(180.00)))
                 .build();
 
         /*
@@ -205,7 +237,7 @@ public class AutoLeftSpline extends Main {
                 case OUTTAKE:
                     setPowerServo(-1);
                     runtime.reset();
-                    while(runtime.milliseconds() < 800){
+                    while(runtime.milliseconds() < 300){
                         lift.update();
                     }
                     setPowerServo(0);
@@ -222,7 +254,20 @@ public class AutoLeftSpline extends Main {
 
                         // ADD additive factor
                         park_trajectory = drive.trajectorySequenceBuilder(go_low_junction_trajectory.end())
-                                .lineToConstantHeading(new Vector2d(-12 + parkY - ADDITIVE_FACTOR_X, -12 - ADDITIVE_FACTOR_Y))
+                                .lineToConstantHeading(new Vector2d(-12 + parkY, -12))
+                                //.lineToConstantHeading(new Vector2d(-12 + parkY - ADDITIVE_FACTOR_X, -12 - ADDITIVE_FACTOR_Y))
+                                .setVelConstraint(new TrajectoryVelocityConstraint() {
+                                    @Override
+                                    public double get(double v, @NonNull Pose2d pose2d, @NonNull Pose2d pose2d1, @NonNull Pose2d pose2d2) {
+                                        return 50;
+                                    }
+                                })
+                                .setAccelConstraint(new TrajectoryAccelerationConstraint() {
+                                    @Override
+                                    public double get(double v, @NonNull Pose2d pose2d, @NonNull Pose2d pose2d1, @NonNull Pose2d pose2d2) {
+                                        return 45;
+                                    }
+                                })
                                 .build();
 
                         drive.followTrajectorySequenceAsync(park_trajectory);
@@ -234,7 +279,8 @@ public class AutoLeftSpline extends Main {
                         // ADD additive factor
                         go_stack_low_trajectory = drive.trajectorySequenceBuilder(go_low_junction_trajectory.end())
                                 .lineTo(new Vector2d(-47.88, -12.16))
-                                .lineToSplineHeading(new Pose2d(-63.98 - ADDITIVE_FACTOR_X, -12.22 - ADDITIVE_FACTOR_Y, Math.toRadians(180.00)))
+                                .lineToSplineHeading(new Pose2d(-63.5 - ADDITIVE_FACTOR_X, -12.22 - ADDITIVE_FACTOR_Y, Math.toRadians(180.00)))
+                                //.lineToSplineHeading(new Pose2d(-63.98 - ADDITIVE_FACTOR_X, -12.22 - ADDITIVE_FACTOR_Y, Math.toRadians(180.00)))
                                 .build();
 
                         drive.followTrajectorySequenceAsync(go_stack_low_trajectory);
@@ -256,7 +302,9 @@ public class AutoLeftSpline extends Main {
                     go_low_junction_trajectory = drive.trajectorySequenceBuilder(new Pose2d(-64.00, -12.25, Math.toRadians(180.00)))
                             //.lineToConstantHeading(new Vector2d(-64 + 4, -12.23))
                             .splineToLinearHeading(new Pose2d(-64 + 4, -12.23, Math.toRadians(180)), Math.toRadians(180))
-                            .lineToLinearHeading(new Pose2d(-48.03 - ADDITIVE_FACTOR_X, -12.25 - 1.95 - ADDITIVE_FACTOR_Y, Math.toRadians(270.00)))
+                            //.lineToLinearHeading(new Pose2d(-48.03 - ADDITIVE_FACTOR_X, -12.25 - 1.95 - ADDITIVE_FACTOR_Y, Math.toRadians(270.00)))
+                            .lineToLinearHeading(new Pose2d(-48.03 - ADDITIVE_FACTOR_X, -12.25 - 2.0 - ADDITIVE_FACTOR_Y, Math.toRadians(270.00)))
+
                             .build();
 
                     if (lift.hasSurpassedStack()){
@@ -319,12 +367,12 @@ public class AutoLeftSpline extends Main {
 
         public double getAdditiveFactorY() {
             // 5th -> 0, 4th -> 1, etc...
-            return .37 * (5 - currentCone); // in inches
+            return .45 * (5 - currentCone); // in inches
         }
 
         public double getAdditiveFactorX() {
             // 5th -> 0, 4th -> 1, etc...
-            return .3 * (5 - currentCone); // in inches
+            return .19 * (5 - currentCone); // in inches
         }
 
         public void setTargetPosition(int ticks){
@@ -368,7 +416,7 @@ public class AutoLeftSpline extends Main {
             setTargetPosition((int) (MAX_STACK_VAL * l_ratio));
 
             currentCone--;
-            return !(currentCone >= 0);
+            return !(currentCone >= 1);
         }
 
         public boolean hasSurpassedStack(){
