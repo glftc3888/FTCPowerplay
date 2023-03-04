@@ -134,8 +134,8 @@ public class Main extends LinearOpMode {
             }*/
 
             //servo intake, servo outtake
-            if (gamepad2.left_trigger > .6f) {intake(1);}
-            else if (gamepad2.right_trigger > .6f) {outtake(.7);}
+            if (gamepad2.left_trigger > .6f) {outtake(1);}
+            else if (gamepad2.right_trigger > .6f) {intake(.7);}
             else {kill_intake();}
 
             // state variables (switching between them)
@@ -710,7 +710,7 @@ public class Main extends LinearOpMode {
         private static final double CIRCUMFERENCE = 112; // in mm
 
         public DcMotor LinearSlide;
-        private int LOW_EXTENSION =  (int)(385 / CIRCUMFERENCE * LinearSlideTPR);
+        private int LOW_EXTENSION =  (int)(365 / CIRCUMFERENCE * LinearSlideTPR);
         private int HIGH_EXTENSION = (int) (4240 * (384.5 / 537.7)); // in ticks
         private int MEDIUM_EXTENSION = (int) (3000 * (384.5 / 537.7)); // in ticks
         private int MAX_STACK_VAL = (int) ((5.6 * 2.54 * 10.0 - 30) / CIRCUMFERENCE * LinearSlideTPR);
@@ -744,7 +744,7 @@ public class Main extends LinearOpMode {
 
         public void continousMode(double input){
             LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            LinearSlide.setPower(-input);
+            LinearSlide.setPower(-input/2);
         }
 
         public void setTargetPosition(int ticks){
@@ -797,7 +797,7 @@ public class Main extends LinearOpMode {
         public void update() {
             int currentTicks = LinearSlide.getCurrentPosition();
             double slidePower = slidePIDController.update(currentTicks);
-            int TOLERANCE = 20;
+            int TOLERANCE = 20 + 50;
             if (!isStabilized) {
                 if ((Math.abs(currentTicks - targetPos) > TOLERANCE)) {
                     LinearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
